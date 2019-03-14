@@ -53,4 +53,11 @@ MAALI_MODULE_SET_F77='gfortran'
 MAALI_MODULE_SET_F90='gfortran'
 MAALI_MODULE_SET_F95='gfortran'
 MAALI_MODULE_SET_F9X='gfortran'
+
+#  set OMPI_F77, OMPI_FC, OMPI_CC, OMPI_CXX if on a IBM POWER system for spectrum MPI
+MAALI_MODULE_SET_OMPI_F77='gfortran'
+MAALI_MODULE_SET_OMPI_FC='gfortran'
+MAALI_MODULE_SET_OMPI_CC='gcc'
+MAALI_MODULE_SET_OMPI_CXX='g++'
+
 ##############################################################################
