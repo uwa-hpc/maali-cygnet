@@ -69,7 +69,7 @@ function maali_build {
   if [[ ${MAALI_POWER} -eq "1" ]]; then
     if [ "$MAALI_COMPILER_NAME" == "gcc" ]; then
       export FFLAGS="-fPIC -O3 -mcpu=power8 -funroll-loops"
-      exorrt CFLAGS="-fPIC -O3 -mcpu=power8 -funroll-loops"
+      export CFLAGS="-fPIC -O3 -mcpu=power8 -funroll-loops"
     elif  [ "$MAALI_COMPILER_NAME" == "pgi" ]; then
       export FFLAGS="-tp=pwr8 -O3 -mp=align " 
       export CFLAGS="-tp=pwr8 -O3 -mp=align "     
