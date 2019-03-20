@@ -1,18 +1,11 @@
 ##############################################################################
-# maali cygnet file for hdf5
+# maali cygnet file for metis
 ##############################################################################
 
 read -r -d '' MAALI_MODULE_WHATIS << EOF
+METIS is a set of serial programs for partitioning graphs, partitioning finite element meshes, and producing fill reducing orderings for sparse matrices. The algorithms implemented in METIS are based on the multilevel recursive-bisection, multilevel k-way, and multi-constraint partitioning schemes developed in our lab.
 
-HDF5 is a data model, library, and file format for storing and managing data.
-It supports an unlimited variety of datatypes, and is designed for flexible and
-efficient I/O and for high volume and complex data. HDF5 is portable and is
-extensible, allowing applications to evolve in their use of HDF5. The HDF5
-Technology suite includes tools and applications for managing, manipulating,
-viewing, and analyzing data in the HDF5 format.
-
-For further information see https://www.hdfgroup.org/hdf5/
-
+For further information see http://glaros.dtc.umn.edu/gkhome/views/metis
 EOF
 
 # specify which compilers we want to build the tool with
@@ -46,6 +39,6 @@ MAALI_MODULE_SET_MANPATH=1
 MAALI_MODULE_SET_CPATH=1
 MAALI_MODULE_SET_FPATH=1
 MAALI_MODULE_SET_FCPATH=1
-MAALI_MODULE_SET_HDF5_DIR='$MAALI_APP_HOME'
+MAALI_MODULE_SET_METIS_DIR='$MAALI_APP_HOME'
 
 ##############################################################################
