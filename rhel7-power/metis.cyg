@@ -33,6 +33,9 @@ MAALI_TOOL_TYPE="devel"
 # tool pre-requisites
 MAALI_TOOL_PREREQ=""
 
+# tool build pre-requisites - not added to the module, only needed for building (loaded after MAALI_TOOL_PREREQ)
+MAALI_TOOL_BUILD_PREREQ="cmake"
+
 # add additional configure options
 MAALI_TOOL_CONFIGURE=' '
 
