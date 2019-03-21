@@ -25,7 +25,7 @@ MAALI_TOOL_TYPE="devel"
 
 # tool pre-requisites modules needed to install this new tool/package
 # may need to install zlib!!
-MAALI_TOOL_PREREQ=" "
+MAALI_TOOL_PREREQ="ucx/1.5.0"
 
 # add additional configure options
 MAALI_TOOL_CONFIGURE="--with-hwloc --enable-shared --disable-static "

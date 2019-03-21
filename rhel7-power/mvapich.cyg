@@ -1,0 +1,94 @@
+##############################################################################
+# maali cygnet file for mvapich -- tested with versions 2.2 and 2.3a
+##############################################################################
+
+read -r -d '' MAALI_MODULE_WHATIS << EOF
+
+MVAPICH is a high-performance implemenation of the MPI standard.  It's designed
+to exploit novel networking architectures, such as Infiniband, OmniPath, and
+RoCE.
+
+For further information see https://www.mvapich.cse.ohio-state.edu/
+
+EOF
+
+# specify which compilers and CPU TARGETS we want to build the tool with
+if [ "${MAALI_CUDA_BUILD}" = "1" ]; then
+	MAALI_TOOL_COMPILERS="gcc/6.4.0 gcc/6.5.0"
+	MAALI_TOOL_CUDA_COMPILERS="cuda/9.2"
+	MAALI_TOOL_CPU_TARGET="na"
+else
+        MAALI_TOOL_COMPILERS="$MAALI_DEFAULT_COMPILERS"
+ 	MAALI_TOOL_CPU_TARGET="$MAALI_DEFAULT_TOOL_CPU_TARGET"
+fi
+
+# URL to download the source code from
+MAALI_URL="http://mvapich.cse.ohio-state.edu/download/$MAALI_TOOL_NAME/mv2/${MAALI_TOOL_NAME}2-$MAALI_TOOL_VERSION.tar.gz"
+
+# location we are downloading the source code to
+MAALI_DST="$MAALI_SRC/${MAALI_TOOL_NAME}2-$MAALI_TOOL_VERSION.tar.gz"
+
+# where the unpacked source code is located
+MAALI_TOOL_BUILD_DIR="$MAALI_BUILD_DIR/${MAALI_TOOL_NAME}2-$MAALI_TOOL_VERSION"
+
+# type of tool (eg. apps, devel, python, etc.)
+MAALI_TOOL_TYPE="devel"
+
+# tool build pre-requisites - not added to the module, only needed for building (loaded after MAALI_TOOL_PREREQ)
+MAALI_TOOL_BUILD_PREREQ=""
+
+# tool pre-requisites modules needed to install this new tool/package
+MAALI_TOOL_PREREQ=""
+
+# add additional configure options
+#
+#### NOTE ####
+# These configure options are only for getting a functional build on f001
+# They need to be changed for Athena and more performant options chosen
+##############
+MAALI_TOOL_CONFIGURE="--enable-romio --enable-cxx --enable-fortran-options=yes F90= F90FLAGS= "
+
+# Used on when Maali is invoked with -n option 
+MAALI_CUDA_SUPPORT=1
+
+# for auto-building module files
+MAALI_MODULE_SET_PATH="${MAALI_INSTALL_DIR}bin"
+MAALI_MODULE_SET_LD_LIBRARY_PATH="${MAALI_INSTALL_DIR}lib"
+MAALI_MODULE_SET_MANPATH="${MAALI_INSTALL_DIR}doc/man"
+MAALI_MODULE_SET_MVAPICH2_HOME="${MAALI_INSTALL_DIR}"
+if [ "${MAALI_CUDA_BUILD}" = "1" ]; then
+ MAALI_MODULE_SET_MV2_USE_CUDA="\1"
+fi
+##############################################################################
+function maali_build {
+	cd $MAALI_TOOL_BUILD_DIR
+
+	echo "Building for CPU_TARGET=$MAALI_CPU_TARGET with COMPILER=$COMPILER"
+	export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/lib64
+	# Checking for CPU target
+	if [ "$MAALI_CPU_TARGET" = "knl" ]; then
+		maali_run "./configure --prefix=${MAALI_INSTALL_DIR} ${MAALI_TOOL_CONFIGURE} --with-device=ch3:psm --with-psm2-libpath=/usr/lib64 --with-psm2-include=/usr/include"
+	
+	elif [ "$MAALI_CPU_TARGET" = "broadwell" ]; then
+		if [ "${MAALI_CUDA_BUILD}" = "1" ]; then 
+			# Prepending relevant configure tests with srun to run on compute nodes of GPU partition of Athena
+			if [ "${COMPILER}" = "pgi" ]; then
+				echo "Configuring with pgi compilers"
+				maali_run "./configure --prefix=${MAALI_INSTALL_DIR} ${MAALI_TOOL_CONFIGURE}  --enable-cuda=basic --with-cuda-libpath=$MAALI_CUDA_HOME/lib64 --with-cuda-include=$MAALI_CUDA_HOME/include --with-ib-libpath=/usr/lib64 CPPFLAGS=\"-D__x86_64 -D__align__\(n\)=__attribute__\(\(aligned\(n\)\)\) -D__location__\(a\)=__annotate__\(a\) -DCUDARTAPI= \" CFLAGS=\"-ta=tesla:nordc\" CXX=pgc++ "
+			else
+				maali_run "./configure --prefix=${MAALI_INSTALL_DIR} ${MAALI_TOOL_CONFIGURE} --enable-cuda --with-cuda-libpath=$MAALI_CUDA_HOME/lib64 --with-cuda-include=$MAALI_CUDA_HOME/include --with-ib-libpath=/usr/lib64" 
+			fi
+		else
+			maali_run "./configure --prefix=${MAALI_INSTALL_DIR} ${MAALI_TOOL_CONFIGURE}  --with-ib-libpath=/usr/lib64"
+		fi
+        elif [ "${MAALI_POWER}" = "1" ]; then
+  	     if [ "${MAALI_CUDA_BUILD}" = "1" ]; then
+	        maali_run "./configure --prefix=${MAALI_INSTALL_DIR} ${MAALI_TOOL_CONFIGURE} --enable-cuda --with-cuda-libpath=$MAALI_CUDA_HOME/lib64 --with-cuda-include=$MAALI_CUDA_HOME/include" 
+             fi
+	else 
+		echo "Assuming the Network is Infiniband"
+		maali_run "./configure --prefix=${MAALI_INSTALL_DIR} ${MAALI_TOOL_CONFIGURE} --with-ib-libpath=/usr/lib64" 
+	fi
+	maali_run "make -j 8 VERBOSE=1"
+	maali_run "make install"
+}

@@ -30,7 +30,7 @@ MAALI_TOOL_PREREQ=""
 MAALI_TOOL_BUILD_PREREQ="cmake"
 
 # add additional configure options
-MAALI_TOOL_CONFIGURE=' '
+MAALI_TOOL_CONFIGURE='-DCMAKE_BUILD_TYPE=Release '
 
 # for auto-building module files
 MAALI_MODULE_SET_PATH=1
@@ -40,5 +40,27 @@ MAALI_MODULE_SET_CPATH=1
 MAALI_MODULE_SET_FPATH=1
 MAALI_MODULE_SET_FCPATH=1
 MAALI_MODULE_SET_METIS_DIR='$MAALI_APP_HOME'
+
+##############################################################################
+
+function maali_cmake_build {
+ # allows late evaluation
+ MAALI_TOOL_CONFIGURE_EVAL=`eval echo "$MAALI_TOOL_CONFIGURE"`
+ cd "${MAALI_TOOL_BUILD_DIR}" 
+ sed -i -e 's;"GKlib";"${CMAKE_SOURCE_DIR}/GKlib";g' CMakeLists.txt
+
+ # cmake likes to build in a directory of it's own
+ maali_makedir "${MAALI_TOOL_BUILD_DIR}/${MAALI_TOOL_NAME}-build"
+ cd "${MAALI_TOOL_BUILD_DIR}/${MAALI_TOOL_NAME}-build"
+
+ maali_run "cmake -DCMAKE_INSTALL_PREFIX=$MAALI_INSTALL_DIR $MAALI_TOOL_CONFIGURE_EVAL $MAALI_CMAKE_PATH"
+ if [ $DEBUG ]; then
+   maali_run "make -j $MAALI_CORES VERBOSE=TRUE"
+ else
+   maali_run "make -j $MAALI_CORES "
+ fi
+ maali_run "make install"
+
+}
 
 ##############################################################################
