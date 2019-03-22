@@ -1,0 +1,60 @@
+##############################################################################
+# maali cygnet file for opari2
+##############################################################################
+
+read -r -d '' MAALI_MODULE_WHATIS << EOF
+
+OPARI2 is a tool to automatically instrument C, C++ and Fortran source code files in which pragmas (C/C++) or directives (Fortran) are used. Currently OpenMP and POMP user instrumentation are supported. Function calls to the pomp2_lib.h and pomp2_user_lib.h are inserted around or as replacement for supported directives. By implementing the respective APIs, detailed measurements regarding the runtime behavior of an applications can be made. A conforming implementation needs to implement all functions associated with the supported programming model. The original OPARI was developed to perform source-to-source instrumentation of OpenMP programs. Therefore the main focus of this document still lies on support for OpenMP.
+
+For further information see http://scorepci.pages.jsc.fz-juelich.de/opari2-pipelines/docs/opari2-2.0.4/html/
+
+EOF
+
+# URL to download the source code from
+MAALI_URL="https://www.vi-hps.org/upload/packages/$MAALI_TOOL_NAME/${MAALI_TOOL_NAME}-${MAALI_TOOL_VERSION}.tar.gz"
+
+# location we are downloading the source code to
+MAALI_DST="$MAALI_SRC/$MAALI_TOOL_NAME-$MAALI_TOOL_VERSION.tar.gz"
+
+# where the unpacked source code is located
+MAALI_TOOL_BUILD_DIR="$MAALI_BUILD_DIR/$MAALI_TOOL_NAME-$MAALI_TOOL_VERSION"
+
+# type of tool (eg. apps, devel, python, etc.)
+MAALI_TOOL_TYPE="devel"
+
+# tool pre-requisites modules needed to install this new tool/package
+MAALI_TOOL_PREREQ=" "
+
+# specify which compilers we want to build the tool with. We specify only compiler that work with CUDA build
+MAALI_TOOL_COMPILERS="$MAALI_DEFAULT_COMPILERS"
+
+
+
+# for auto-building module files
+MAALI_MODULE_SET_PATH=1
+MAALI_MODULE_SET_LD_LIBRARY_PATH=1
+MAALI_MODULE_SET_CPATH=1
+MAALI_MODULE_SET_MANPATH=1
+
+##############################################################################
+
+
+function maali_build {
+
+if [[ ${COMPILER} == "gcc" ]]; then 
+# add additional configure options
+MAALI_TOOL_CONFIGURE="--with-compiler-suite=gcc"
+elif [[ ${COMPILER} == "xl" ]]; then 
+MAALI_TOOL_CONFIGURE="--with-compiler-suite=ibm"
+fi
+
+MAALI_TOOL_CONFIGURE_EVAL=`eval echo "$MAALI_TOOL_CONFIGURE"`
+
+cd "$MAALI_TOOL_BUILD_DIR"
+
+# Making single precision version with type prefix
+maali_run "./configure --prefix=$MAALI_INSTALL_DIR $MAALI_TOOL_CONFIGURE_EVAL "
+maali_run "make -j $MAALI_CORES"
+
+}
+##############################################################################
