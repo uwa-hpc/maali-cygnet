@@ -1,0 +1,70 @@
+##############################################################################
+# maali cygnet file for parmetis
+##############################################################################
+
+read -r -d '' MAALI_MODULE_WHATIS << EOF
+ParMETIS is an MPI-based parallel library that implements a variety of algorithms for partitioning unstructured graphs, meshes, and for computing fill-reducing orderings of sparse matrices. ParMETIS extends the functionality provided by METIS and includes routines that are especially suited for parallel AMR computations and large scale numerical simulations. The algorithms implemented in ParMETIS are based on the parallel multilevel k-way graph-partitioning, adaptive repartitioning, and parallel multi-constrained partitioning schemes developed in our lab.
+
+For further information see http://glaros.dtc.umn.edu/gkhome/metis/parmetis/overview
+EOF
+
+# specify which compilers we want to build the tool with
+MAALI_TOOL_COMPILERS="$MAALI_DEFAULT_COMPILERS"
+
+# URL to download the source code from
+MAALI_URL="http://glaros.dtc.umn.edu/gkhome/fetch/sw/${MAALI_TOOL_NAME}/${MAALI_TOOL_NAME}-${MAALI_TOOL_VERSION}.tar.gz"
+
+# location we are downloading the source code to
+MAALI_DST="$MAALI_SRC/$MAALI_TOOL_NAME-$MAALI_TOOL_VERSION.tar.gz"
+
+# where the unpacked source code is located
+MAALI_TOOL_BUILD_DIR="$MAALI_BUILD_DIR/$MAALI_TOOL_NAME-$MAALI_TOOL_VERSION"
+
+# type of tool (eg. apps, devel, python, etc.)
+MAALI_TOOL_TYPE="devel"
+
+# tool pre-requisites
+MAALI_TOOL_PREREQ="metis/5.1.0 openmpi/3.1.3"
+
+# tool build pre-requisites - not added to the module, only needed for building (loaded after MAALI_TOOL_PREREQ)
+MAALI_TOOL_BUILD_PREREQ="cmake/3.0.1"
+
+# add additional configure options
+MAALI_TOOL_CONFIGURE='-DCMAKE_BUILD_TYPE=Release '
+MAALI_TOOL_CONFIGURE+='-DMETIS_PATH=${METIS_DIR} -DGKLIB_PATH=${METIS_DIR}/GKlib '
+
+# for auto-building module files
+MAALI_MODULE_SET_PATH=1
+MAALI_MODULE_SET_LD_LIBRARY_PATH=1
+MAALI_MODULE_SET_MANPATH=1
+MAALI_MODULE_SET_CPATH=1
+MAALI_MODULE_SET_FPATH=1
+MAALI_MODULE_SET_FCPATH=1
+MAALI_MODULE_SET_PARMETIS_DIR='$MAALI_APP_HOME'
+
+##############################################################################
+
+function maali_cmake_build {
+ # allows late evaluation
+ MAALI_TOOL_CONFIGURE_EVAL=`eval echo "$MAALI_TOOL_CONFIGURE"`
+ cd "${MAALI_TOOL_BUILD_DIR}" 
+ #sed -i -e 's;"GKlib";"${CMAKE_SOURCE_DIR}/GKlib";g' CMakeLists.txt
+ 
+ export CFLAGS="-fPIC -mcpu=power8 -O3"
+ export CXXFLAGS="-fPIC -mcpu=power8 -O3"
+ 
+ # cmake likes to build in a directory of it's own
+ maali_makedir "${MAALI_TOOL_BUILD_DIR}/${MAALI_TOOL_NAME}-build"
+ cd "${MAALI_TOOL_BUILD_DIR}/${MAALI_TOOL_NAME}-build"
+
+ maali_run "cmake -DCMAKE_INSTALL_PREFIX=$MAALI_INSTALL_DIR $MAALI_TOOL_CONFIGURE_EVAL $MAALI_CMAKE_PATH"
+ if [ $DEBUG ]; then
+   maali_run "make -j $MAALI_CORES VERBOSE=TRUE"
+ else
+   maali_run "make -j $MAALI_CORES "
+ fi
+ maali_run "make install"
+
+}
+
+##############################################################################
