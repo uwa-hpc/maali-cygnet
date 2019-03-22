@@ -1,0 +1,41 @@
+##############################################################################
+# maali cygnet file for otf2
+##############################################################################
+
+read -r -d '' MAALI_MODULE_WHATIS << EOF
+
+The OTF2 library provides an interface to write and read trace data.
+
+OTF2 is developed within the Score-P project. The Score-P project is funded by the German Federal Ministry of Education and Research. OTF2 is available under the BSD open source license that allows free usage for academic and commercial applications.
+
+For more information see: https://silc.zih.tu-dresden.de/otf2-current/
+
+EOF
+
+# URL to download the source code from
+MAALI_URL="https://www.vi-hps.org/cms/upload/packages/${MAALI_TOOL_NAME}/${MAALI_TOOL_NAME}-${MAALI_TOOLVERSION}.tar.gz"
+
+# location we are downloading the source code to
+MAALI_DST="$MAALI_SRC/$MAALI_TOOL_NAME-$MAALI_TOOL_VERSION.tar.gz"
+
+# where the unpacked source code is located
+MAALI_TOOL_BUILD_DIR="$MAALI_BUILD_DIR/$MAALI_TOOL_NAME-$MAALI_TOOL_VERSION"
+
+# type of tool (eg. apps, devel, python, etc.)
+MAALI_TOOL_TYPE="devel"
+
+# tool pre-requisites modules needed to install this new tool/package
+MAALI_TOOL_PREREQ="python/3.7.2 "
+
+# specify which compilers we want to build the tool with. We specify only compiler that work with CUDA build
+MAALI_TOOL_COMPILERS="$MAALI_DEFAULT_COMPILERS"
+
+
+
+# for auto-building module files
+MAALI_MODULE_SET_PATH=1
+MAALI_MODULE_SET_LD_LIBRARY_PATH=1
+MAALI_MODULE_SET_CPATH=1
+MAALI_MODULE_SET_MANPATH=1
+
+##############################################################################
