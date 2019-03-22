@@ -1,5 +1,5 @@
-a##############################################################################
-4 maali config file for ScaLAPACK/BLACS
+##############################################################################
+ maali config file for ScaLAPACK/BLACS
 ##############################################################################
 
 # specify which compilers we want to build the tool with
@@ -21,10 +21,14 @@ MAALI_TOOL_TYPE="devel"
 MAALI_TOOL_PREREQ="$MAALI_DEFAULT_MPI lapack/3.8.0 openblas/0.2.20"
 
 # tool build pre-requisites - not added to the module, only needed for building (loaded after MAALI_TOOL_PREREQ)
-MAALI_TOOL_BUILD_PREREQ="cmake"
+MAALI_TOOL_BUILD_PREREQ="cmake/3.0.1"
 
 # Configuration flags for make/cmake.
-MAALI_TOOL_CONFIGURE='-DBUILD_SHARED_LIBS:BOOL=ON -DCMAKE_BUILD_TYPE:STRING=Release -DBLAS_LIBRARIES:PATH=${LAPACK}/lib/libblas.so -DLAPACK_LIBRARIES:PATH=${LAPACK}/lib/liblapack.so -DBUILD_TESTING=ON '
+MAALI_TOOL_CONFIGURE='-DBUILD_SHARED_LIBS:BOOL=ON -DCMAKE_BUILD_TYPE:STRING=Release '
+MAALI_TOOL_CONFIGURE+='-DUSE_OPTIMIZED_LAPACK_BLAS=ON '
+MAALI_TOOL_CONFIGURE+='-DBLAS_LIBRARIES:PATH=${MAALI_OPENBLAS_HOME}/lib/libopenblas.so '
+MAALI_TOOL_CONFIGURE+='-DLAPACK_LIBRARIES:PATH=${LAPACK}/lib64/liblapack.so -DBUILD_TESTING=ON '
+MAALI_TOOL_CONFIGURE+='-DMPIEXEC_MAX_NUMPROCS=4 -DCMAKE_VERBOSE_MAKEFILE=ON  '
 
 # for auto-building module files
 MAALI_MODULE_SET_LD_LIBRARY_PATH=1

@@ -44,6 +44,7 @@ if [ $MAALI_CUDA_BUILD -eq 0 ]; then
    MAALI_TOOL_CONFIGURE+="--without-cuda "
 else
 # support building Openmpi with CUDA
+   MAALI_TOOL_PREREQ="ucx-gpu/1.5"
    MAALI_TOOL_COMPILERS="$MAALI_DEFAULT_GCC_COMPILERS"
    MAALI_TOOL_CUDA_COMPILERS="cuda/9.2"
    MAALI_TOOL_CONFIGURE+="--with-cuda=\${CUDA_HOME}/include "
@@ -55,6 +56,9 @@ MAALI_MODULE_SET_PATH=1
 MAALI_MODULE_SET_LD_LIBRARY_PATH=1
 MAALI_MODULE_SET_CPATH=1
 MAALI_MODULE_SET_MANPATH=1
+MAALI_MODULE_SET_CC='mpicc'
+MAALI_MODULE_SET_CXX='mpixx'
+MAALI_MODULE_SET_F90='mpif90'
 
 ##############################################################################
 
