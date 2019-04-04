@@ -11,7 +11,7 @@ IL (Intermediate Language) Analyzers, and DUCTAPE (C++ program Database
 Utilities and Conversion Tools APplication Environment) library and applica-
 tions.  The EDG C++ (or Mutek Fortran 90) Front End first parses a source 
 file, and produces an intermediate language file.  The appropriate IL 
-Analyzer processes this IL file, and creates a "program database" (PDB) file 
+Analyzer processes this IL file, and creates a program database (PDB) file 
 consisting of the high-level interface of the original source.  Use of the 
 DUCTAPE library then makes the contents of the PDB file accessible to 
 applications. This release also includes the Flint F95 parser from Cleanscape 
