@@ -39,8 +39,8 @@ function maali_python_build {
 cd $MAALI_TOOL_BUILD_DIR
 
 maali_run "python setup.py config"
-maali_run "python setup.py build"
-maali_run "python setup.py install --prefix=$MAALI_INSTALL_DIR"
+#maali_run "python setup.py build"
+#maali_run "python setup.py install --prefix=$MAALI_INSTALL_DIR"
 
 }
 
