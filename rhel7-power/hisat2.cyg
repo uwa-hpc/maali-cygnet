@@ -1,0 +1,68 @@
+##############################################################################
+# maali config file for hisat2
+##############################################################################
+
+read -r -d '' MAALI_MODULE_WHATIS << EOF
+HISAT2 is a fast and sensitive alignment program for mapping next-generation sequencing reads (both DNA and RNA) to a population of human genomes (as well as to a single reference genome). Based on an extension of BWT for graphs [Sirén et al. 2014], we designed and implemented a graph FM index (GFM), an original approach and its first implementation to the best of our knowledge. In addition to using one global GFM index that represents a population of human genomes, HISAT2 uses a large set of small GFM indexes that collectively cover the whole genome (each index representing a genomic region of 56 Kbp, with 55,000 indexes needed to cover the human population). These small indexes (called local indexes), combined with several alignment strategies, enable rapid and accurate alignment of sequencing reads. This new indexing scheme is called a Hierarchical Graph FM index (HGFM). 
+
+
+For further information see https://ccb.jhu.edu/software/hisat2/index.shtml
+
+EOF
+
+# specify which compilers we want to build the tool with
+MAALI_TOOL_COMPILERS="$MAALI_DEFAULT_GCC_COMPILERS"
+
+# URL to download the source code from
+MAALI_URL="http://ccb.jhu.edu/software/hisat2/dl/$MAALI_TOOL_NAME-$MAALI_TOOL_VERSION-source.zip"
+
+# location we are downloading the source code to
+MAALI_DST="$MAALI_SRC/$MAALI_TOOL_NAME-$MAALI_TOOL_VERSION-source.zip"
+
+# where the unpacked source code is located
+MAALI_TOOL_BUILD_DIR="$MAALI_BUILD_DIR/$MAALI_TOOL_NAME-$MAALI_TOOL_VERSION"
+
+# type of tool (eg. apps, devel, python, etc.)
+MAALI_TOOL_TYPE="tools"
+
+# tool pre-requisites
+MAALI_TOOL_PREREQ="veclibs/1.0.4"
+
+# add additional configure options
+#MAALI_TOOL_CONFIGURE=" V=1 "
+#MAALI_TOOL_CONFIGURE+="CPPFLAGS=\"-I\${MAALI_VECLIBS_HOME}/include\" "
+#MAALI_TOOL_CONFIGURE+="CFLAGS=\"-I\${MAALI_VECLIBS_HOME}/include -fsigned-char\" "
+#MAALI_TOOL_CONFIGURE+="CXXFLAGS=\"-I\${MAALI_VECLIBS_HOME}/include -fsigned-char\" "
+
+# for auto-building module files
+MAALI_MODULE_SET_PATH=1
+MAALI_MODULE_SET_LD_LIBRARY_PATH=1
+MAALI_MODULE_SET_MANPATH=1
+##############################################################################
+function maali_build {
+  
+  # allows late evaluation
+  MAALI_TOOL_CONFIGURE_EVAL=`eval echo "$MAALI_TOOL_CONFIGURE"`
+  
+  cd $MAALI_TOOL_BUILD_DIR
+ 
+  maali_run "patch < ${MAALI_SRC}/patches/code-fixes.patch"
+  maali_run "patch < ${MAALI_SRC}/patches/makefile.patch"
+  maali_run "patch < ${MAALI_SRC}/patches/popcnt-support.patch"
+  maali_run "patch < ${MAALI_SRC}/patches/veclib-support.patch"
+
+ ARCH_FLAGS="-m64 -mcpu=power8 -mtune=power8 -maltivec -mvsx -mcmodel=medium"
+
+export CPPFLAGS="${CPPFLAGS} -I${MAALI_VECLIBS_HOME}/include "
+export CFLAGS="${CFLAGS} -I${MAALI_VECLIBS_HOME}/include -fsigned-char "
+export CXXFLAGS="${CXXFLAGS} -I${MAALI_VECLIBS_HOME}/include -fsigned-char "
+
+  maali_run "make -j 8 V=1"
+
+  maali_makedir "${MAALI_INSTALL_DIR}/bin"
+  maali_run "install -m 755 hisat2 hisat2-align-l hisat2-align-s \
+    hisat2-build hisat2-build-l hisat2-build-s \
+    hisat2-inspect hisat2-inspect-l hisat2-inspect-s \
+    \"${MAALI_INSTALL_DIR}/bin\" "
+}
+##############################################################################
