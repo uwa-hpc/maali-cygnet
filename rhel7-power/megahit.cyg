@@ -26,7 +26,7 @@ MAALI_TOOL_BUILD_DIR="$MAALI_BUILD_DIR/$MAALI_TOOL_NAME-$MAALI_TOOL_VERSION"
 MAALI_TOOL_TYPE="bio-apps"
 
 # tool pre-requisites
-MAALI_TOOL_PREREQ="cuda"
+MAALI_TOOL_PREREQ=" "
 
 # add additional compiler options and makefile flags 
 MAALI_TOOL_CONFIGURE="use_gpi=0 disablempopcnt=1 abi=1"
@@ -42,8 +42,8 @@ function maali_build  {
   MAALI_TOOL_CONFIGURE_EVAL=`eval echo "$MAALI_TOOL_CONIFIGURE"`
 
   cd $MAALI_TOOL_BUILD_DIR
-
-  sed -i -e 's;"-g -O2 ";"-mcpu=power8 -O3 ";g' Makefile
+  pwd
+  sed -i -e 's;-g -O2 ;-mcpu=power8 -O3 ;g' Makefile
 
   maali_run "make -j $MAALI_CORES ${MAALI_TOOL_CONFIGURE_EVAL}release "
 
