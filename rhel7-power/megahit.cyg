@@ -45,7 +45,7 @@ function maali_build  {
   pwd
   sed -i -e 's;-g -O2 ;-mcpu=power8 -O3 ;g' Makefile
 
-  maali_run "make -j $MAALI_CORES ${MAALI_TOOL_CONFIGURE_EVAL}release "
+  maali_run "make -j $MAALI_CORES ${MAALI_TOOL_CONFIGURE_EVAL}"
 
   maali_makedir "${MAALI_INSTALL_DIR}/bin"
   maali_run "mv megahit $MAALI_INSTALL_DIR/bin"
