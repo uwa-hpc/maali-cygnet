@@ -1,0 +1,58 @@
+##############################################################################
+# MAALI config file for MEGAHIT
+##############################################################################
+
+read -r -d '' MAALI_MODULE_WHATIS << EOF
+MEGAHIT: An ultra-fast single-node solution for large and complex metagenomics assembly via succinct de Bruijn graph 
+
+For further information see https://github.com/voutcn/megahit
+
+EOF
+
+# specify which compilers we want to build the tool with
+MAALI_TOOL_COMPILERS="$MAALI_DEFAULT_GCC_COMPILERS"
+
+# URL to download the source code from
+MAALI_URL="https://github.com/voutcn/${MAALI_TOOL_NAME}/archive/v${MAALI_TOOL_VERSION}.tar.gz"
+#https://github.com/voutcn/megahit/archive/v1.1.4.tar.gz
+
+# location we are downloading the source code to
+MAALI_DST="$MAALI_SRC/v$MAALI_TOOL_VERSION.tar.gz"
+
+# where the unpacked source code is located
+MAALI_TOOL_BUILD_DIR="$MAALI_BUILD_DIR/$MAALI_TOOL_NAME-$MAALI_TOOL_VERSION"
+
+# type of tool (eg. apps, devel, python, etc.)
+MAALI_TOOL_TYPE="bio-apps"
+
+# tool pre-requisites
+MAALI_TOOL_PREREQ="cuda"
+
+# add additional compiler options and makefile flags 
+MAALI_TOOL_CONFIGURE="use_gpi=0 disablempopcnt=1 abi=1"
+
+# for auto-building module files
+MAALI_MODULE_SET_PATH=1
+
+##############################################################################
+
+function maali_build  {
+
+# allows late evaluation
+  MAALI_TOOL_CONFIGURE_EVAL=`eval echo "$MAALI_TOOL_CONIFIGURE"`
+
+  cd "$MAALI_TOOL_BUILD_DIR"
+  sed -i -e 's;"-g -O2 ";"-mcpu=power8 -O3 ";g' Makefile
+
+  maali_run "make -j $MAALI_CORES ${MAALI_TOOL_CONFIGURE_EVAL}release "
+
+  maali_makedir "${MAALI_INSTALL_DIR}/bin"
+  maali_run "mv megahit $MAALI_INSTALL_DIR/bin"
+  maali_run "mv megahit_asm_core $MAALI_INSTALL_DIR/bin"
+  maali_run "mv megahit_toolkit $MAALI_INSTALL_DIR/bin" 
+  maali_run "mv megahit_sdbg_build  $MAALI_INSTALL_DIR/bin"  
+# no gpu as does not work with cuda > 7.0
+#  maali_run "mv megahit_sdbg_build_gpu $MAALI_INSTALL_DIR/bin"
+
+}
+
