@@ -50,9 +50,9 @@ function maali_build {
 
  ARCH_FLAGS="-m64 -mcpu=power8 -mtune=power8 -maltivec -mvsx -mcmodel=medium"
 
-export CPPFLAGS="${CPPFLAGS} -I${MAALI_VECLIBS_HOME}/include "
-export CFLAGS="${CFLAGS} -I${MAALI_VECLIBS_HOME}/include -fsigned-char "
-export CXXFLAGS="${CXXFLAGS} -I${MAALI_VECLIBS_HOME}/include -fsigned-char "
+export CPPFLAGS="${CPPFLAGS} -I${MAALI_VECLIB_HOME}/include "
+export CFLAGS="${CFLAGS} -I${MAALI_VECLIB_HOME}/include -fsigned-char "
+export CXXFLAGS="${CXXFLAGS} -I${MAALI_VECLIB_HOME}/include -fsigned-char "
 
   maali_run "make -j 8 V=1"
 
