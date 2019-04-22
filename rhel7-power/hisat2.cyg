@@ -26,13 +26,10 @@ MAALI_TOOL_BUILD_DIR="$MAALI_BUILD_DIR/$MAALI_TOOL_NAME-$MAALI_TOOL_VERSION"
 MAALI_TOOL_TYPE="tools"
 
 # tool pre-requisites
-MAALI_TOOL_PREREQ="veclibs/1.0.4"
+MAALI_TOOL_PREREQ="veclib/1.0.4"
 
 # add additional configure options
-#MAALI_TOOL_CONFIGURE=" V=1 "
-#MAALI_TOOL_CONFIGURE+="CPPFLAGS=\"-I\${MAALI_VECLIBS_HOME}/include\" "
-#MAALI_TOOL_CONFIGURE+="CFLAGS=\"-I\${MAALI_VECLIBS_HOME}/include -fsigned-char\" "
-#MAALI_TOOL_CONFIGURE+="CXXFLAGS=\"-I\${MAALI_VECLIBS_HOME}/include -fsigned-char\" "
+MAALI_TOOL_CONFIGURE=" "
 
 # for auto-building module files
 MAALI_MODULE_SET_PATH=1
