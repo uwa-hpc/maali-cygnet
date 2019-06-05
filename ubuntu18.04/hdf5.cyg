@@ -25,11 +25,15 @@ MAALI_TOOL_BUILD_PREREQ="cmake/3.14.5"
 MAALI_CMAKE_TOOL=1
 
 # add additional configure options
-MAALI_TOOL_CONFIGURE='-DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=ON '
-MAALI_TOOL_CONFIGURE+='-DHDF5_BUILD_FORTRAN=ON -DZLIB_DIR=$MAALI_ZLIB_HOME '
-MAALI_TOOL_CONFIGURE+='-DSZIP_DIR=$MAALI_SZIP_HOME -DHDF_USE_110_API_DEFAULT=ON '
-MAALI_TOOL_CONFIGURE+='-DZLIB_INCLUDE_DIR=$MAALI_ZLIB_HOME/include '
-MAALI_TOOL_CONFIGURE+='-DSZIP-INCLUDE_DIR=$MAALI_SZIP_HOME/include '
+MAALI_TOOL_CONFIGURE='-DCMAKE_BUILD_TYPE=Release '
+MAALI_TOOL_CONFIGURE+='-DBUILD_SHARED_LIBS:BOOL=ON '
+MAALI_TOOL_CONFIGURE+='-DHDF5_BUILD_FORTRAN:BOOL=ON '
+MAALI_TOOL_CONFIGURE+='-DHDF5_BUILD_CPP_LIB:BOOL=ON '
+MAALI_TOOL_CONFIGURE+='-DSZIP_DIR:PATH=$MAALI_SZIP_HOME -DZLIB_DIR:PATH=$MAALI_ZLIB_HOME '
+MAALI_TOOL_CONFIGURE+='-DZLIB_INCLUDE_DIR:PATH=$MAALI_ZLIB_HOME/include '
+MAALI_TOOL_CONFIGURE+='-DSZIP-INCLUDE_DIR:PATH=$MAALI_SZIP_HOME/include '
+#  large 64 bit files
+#MAALI_TOOL_CONFIGURE+='=DHDF5_ENABLE_LARGE_FILES '
 # parallel requires MPI 
 #MAALI_TOOL_CONFIGURE+='-DHDF5_ENABLE_PARALLEL '
 # for auto-building module files
@@ -46,14 +50,3 @@ MAALI_MODULE_WHATIS="HDF5 is a data model, library, and file format for storing 
 
 ##############################################################################
 
-#function maali_build {
-#  cd "$MAALI_TOOL_BUILD_DIR"
-#  
-#  MAALI_TOOL_CONFIGURE_EVAL=`eval echo "$MAALI_TOOL_CONFIGURE"`
-#  maali_run "./configure --prefix=$MAALI_INSTALL_DIR $MAALI_TOOL_CONFIGURE_EVAL"
-#  maali_run "make -j $MAALI_CORES" 
-#  maali_run "make test"
-#  maali_run "make install"
-#}
-
-##############################################################################
