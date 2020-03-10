@@ -28,10 +28,10 @@ MAALI_TOOL_BUILD_PREREQ="cmake/3.14.5"
 MAALI_CMAKE_TOOL=1
 
 # add additional configure options
-if [[ $MAALI_TOOL_VERSION == "1.6.10" ]];
+if [[ $MAALI_TOOL_VERSION == "1.6.10" ]]; then
   MAALI_TOOL_CONFIGURE='--enable-production --enable-cxx --enable-parallel '
   MAALI_TOOL_CONFIGURE+='--with-zlib=$MAALI_ZLIB_HOME/lib '
-else #  this is the default for new versions!
+else # this is the default for new versions!
   MAALI_TOOL_CONFIGURE='-DCMAKE_BUILD_TYPE=Release '
   MAALI_TOOL_CONFIGURE+='-DBUILD_SHARED_LIBS:BOOL=ON '
   MAALI_TOOL_CONFIGURE+='-DHDF5_BUILD_FORTRAN:BOOL=ON '
