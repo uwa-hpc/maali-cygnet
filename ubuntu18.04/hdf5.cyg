@@ -23,15 +23,14 @@ MAALI_TOOL_TYPE="devel"
 # tool pre-requisites
 MAALI_TOOL_PREREQ="zlib/1.2.11 szip/2.1.1"
 
-# cmake build
-MAALI_TOOL_BUILD_PREREQ="cmake/3.14.5"
-MAALI_CMAKE_TOOL=1
-
 # add additional configure options
 if [[ $MAALI_TOOL_VERSION == "1.6.10" ]]; then
   MAALI_TOOL_CONFIGURE='--enable-production --enable-cxx --enable-parallel '
   MAALI_TOOL_CONFIGURE+=' --with-zlib=$MAALI_ZLIB_HOME '
 else
+  # cmake build
+  MAALI_TOOL_BUILD_PREREQ="cmake/3.14.5"
+  MAALI_CMAKE_TOOL=1
   # this is the default configuration for new versions!
   MAALI_TOOL_CONFIGURE='-DCMAKE_BUILD_TYPE=Release '
   MAALI_TOOL_CONFIGURE+='-DBUILD_SHARED_LIBS:BOOL=ON '
