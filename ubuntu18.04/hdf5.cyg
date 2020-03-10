@@ -30,7 +30,7 @@ MAALI_CMAKE_TOOL=1
 # add additional configure options
 if [[ $MAALI_TOOL_VERSION == "1.6.10" ]]; then
   MAALI_TOOL_CONFIGURE='--enable-production --enable-cxx --enable-parallel '
-  MAALI_TOOL_CONFIGURE+='--with-zlib=$MAALI_ZLIB_HOME/lib '
+  MAALI_TOOL_CONFIGURE+=' --with-zlib=$MAALI_ZLIB_HOME '
 else
   # this is the default configuration for new versions!
   MAALI_TOOL_CONFIGURE='-DCMAKE_BUILD_TYPE=Release '
