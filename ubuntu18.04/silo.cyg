@@ -24,7 +24,8 @@ MAALI_TOOL_PREREQ="hdf5/1.12.0"
 MAALI_MODULE_SET_PATH=1
 MAALI_MODULE_SET_LD_LIBRARY_PATH=1
 
-MAALI_TOOL_CONFIGURE='--enable-silex --enable-fortran --enable-shared --with-hdf5=$HDF5_DIR/include,$HDF5_DIR/lib'
+MAALI_TOOL_CONFIGURE='--enable-silex --enable-fortran --enable-shared'
+MAALI_TOOL_CONFIGURE+='--with-hdf5=$HDF5_DIR/include,$HDF5_DIR/lib'
 MAALI_TOOL_CONFIGURE_NOHDF5='--enable-silex --enable-fortran --enable-shared'
 # for auto-building module files
 ## these are boolean options ste to 1 to add to module
