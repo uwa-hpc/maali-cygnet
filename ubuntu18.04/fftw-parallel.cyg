@@ -2,6 +2,14 @@
 # maali config file for fftw-parallel
 ##############################################################################
 
+read -r -d ''MAALI_MODULE_WHATIS << EOF
+
+FFTW is a C subroutine library for computing the discrete Fourier transform
+(DFT) in one or more dimensions, of arbitrary input size, and of both real and
+complex data.
+
+EOF
+
 # allows us to substitute
 MAALI_TOOL_NAME_ORIG="fftw"
 
@@ -34,10 +42,10 @@ MAALI_TOOL_BUILD_PREREQ=""
 if [ $MAALI_TOOL_VERSION == 2.1.5 ]; then
   # this is to support gadget2
   MAALI_TOOL_CONFIGURE='--enable-prefix --enable-mpi '
-  MAALI_TOOL_CONFIGURE+='--enable-type-prefix'
+  MAALI_TOOL_CONFIGURE+='--enable-type-prefix '
 else
   MAALI_TOOL_CONFIGURE='--enable-shared --enable-sse2 --enable-mpi '
-  MAALI_TOOL_CONFIGURE+='--enable-openmp --enable-fortran'
+  MAALI_TOOL_CONFIGURE+='--enable-openmp --enable-fortran '
 fi
 
 # runs in front of the configure line
@@ -55,8 +63,6 @@ MAALI_MODULE_SET_FFTW_HOME='$MAALI_APP_HOME'
 MAALI_MODULE_SET_FFTW_INCLUDE='$MAALI_APP_HOME/include'
 MAALI_MODULE_SET_FFTW_LIB='$MAALI_APP_HOME/lib'
 MAALI_MODULE_SET_PKG_CONFIG_PATH=1
-
-MAALI_MODULE_WHATIS="FFTW is a C subroutine library for computing the discrete Fourier transform (DFT) in one or more dimensions, of arbitrary input size, and of both real and complex data."
 
 ##############################################################################
 
@@ -80,9 +86,9 @@ function maali_build {
   cd "$MAALI_TOOL_BUILD_DIR"
   # Making single precision version with type prefix
   if [ $MAALI_TOOL_VERSION == 2.1.5 ]; then
-    TOOL_PRECISION='--enable-float'
+    TOOL_PRECISION=" --enable-float"
   else
-    TOOL_PRECISION=' --enable-single'
+    TOOL_PRECISION=" --enable-single"
   fi
   maali_run "./configure --prefix=$MAALI_INSTALL_DIR $MAALI_TOOL_CONFIGURE $TOOL_PRECISION "
   maali_run "make -j $MAALI_CORES"
