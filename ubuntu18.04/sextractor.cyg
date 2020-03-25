@@ -1,0 +1,39 @@
+##############################################################################
+# maali config file for SExtractor
+##############################################################################
+read -r -d ''MAALI_MODULE_WHATIS << EOF 
+SEtractor is a program that builds a catalogue of objects from an astronomical 
+image. Although it is particularly oriented towards reduction of large scale 
+galaxy-survey data, it can perform reasonably well on moderately crowded 
+star fields.
+  
+For further information see: https://www.astromatic.net/software/sextractor
+
+EOF
+
+# specify which compilers we want to build the tool with
+MAALI_TOOL_COMPILERS="$MAALI_DEFAULT_COMPILERS"
+
+# URL to download the source code from
+MAALI_URL="https://www.astromatic.net/download/$MAALI_TOOL_NAME/$MAALI_TOOL_NAME-$MAALI_TOOL_VERSION.tar.gz"
+
+# location we are downloading the source code to
+MAALI_DST="$MAALI_SRC/$MAALI_TOOL_NAME-$MAALI_TOOL_VERSION.tar.gz"
+
+# where the unpacked source code is located
+MAALI_TOOL_BUILD_DIR="$MAALI_BUILD_DIR/$MAALI_TOOL_NAME-$MAALI_TOOL_VERSION"
+
+# type of tool (eg. apps, devel, python, etc.)
+MAALI_TOOL_TYPE="devel"
+
+# tool pre-requistes
+MAALI_TOOL_PREREQ="fftw/3.3.8"
+
+# add addtional configure options
+MAALI_TOOL_CONFIGURE='--with-fftw-libdir=${FFTW_LIB} '
+MAALI_TOOL_CONFIGURE+='--with-fftw=incdir=${FFTW_INCLUDE} '
+
+
+# for auto-building module files
+MAALI_MODULE_SET_PATH=1
+MAALI_MODULE_SET_MANPATH=1
