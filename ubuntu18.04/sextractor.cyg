@@ -31,7 +31,7 @@ MAALI_TOOL_PREREQ="fftw/3.3.8"
 
 # add addtional configure options
 MAALI_TOOL_CONFIGURE='--with-fftw-libdir=${FFTW_LIB} '
-MAALI_TOOL_CONFIGURE+='--with-fftw=incdir=${FFTW_INCLUDE} '
+MAALI_TOOL_CONFIGURE+='--with-fftw-incdir=${FFTW_INCLUDE} '
 
 
 # for auto-building module files
