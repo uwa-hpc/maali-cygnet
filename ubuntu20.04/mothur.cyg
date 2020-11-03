@@ -32,7 +32,7 @@ function maali_build {
   #sed -i -e 's/USEMPI ?= no/USEMPI ?= yes/' Makefile
   sed -i -e 's/USEBOOST ?= no/USEBOOST ?= yes/' Makefile
   sed -i -e 's/\"Enter_your_boost_library_path_here\"/$MAALI_BOOST_HOME/lib /' Makefile
-  sed -i -e 's/\"Enter_your_boost_include_path_here\"/\$MAALI_BOOST_HOME\/include 
+  sed -i -e 's/\"Enter_your_boost_include_path_here\"/\$MAALI_BOOST_HOME\/include /' Makefile 
   #sed -i -e 's/USEHDF ?= no/USEHDF ?= yes/' Makefile
   #sed -i -e 's/USEGSL ?= no/USEGSL ?= yes/' Makefile
   sed -i -e 's/TARGET_ARCH += -arch x86_64/#TARGET_ARCH += -arch x86_64/' makefile
