@@ -39,13 +39,14 @@ function maali_build {
   cd "$MAALI_TOOL_BUILD_DIR"
   if [ "$MAALI_COMPILER_NAME" == "intel" ]; then
     maali_run "./bootstrap.sh --prefix=$MAALI_INSTALL_DIR --without-libraries=python --with-toolset=intel-linux"
-    maali_run "./bjam -j$MAALI_CORES toolset=intel release"
+    maali_run "./bjam -j$MAALI_CORES toolset=intel variant=release"
   else
     maali_run "./bootstrap.sh --prefix=$MAALI_INSTALL_DIR --without-libraries=python"
-    maali_run "./bjam -j$MAALI_CORES toolset=gcc release -scxxflags=-std=cxx11 --without-mpi  --debug-generator -d2 "
+    maali_run "./b2 -j$MAALI_CORES toolset=gcc variant=release -d2 "
+#-scxxflags=-std=cxx11 --without-mpi  --debug-generator -d2 "
   fi
 
-  maali_run "./bjam install --prefix=$MAALI_INSTALL_DIR"
+  maali_run "./b2 install --prefix=$MAALI_INSTALL_DIR"
 }
 
 ##############################################################################
