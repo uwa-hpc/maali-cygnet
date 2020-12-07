@@ -1,0 +1,35 @@
+##############################################################################
+# maali cygnet file for osu-micro-benchmarks 
+##############################################################################
+
+read -r -d '' MAALI_MODULE_WHATIS << EOF
+
+ OSU micro-benchmarks which permit to measure the performance of an MPI implementation. 
+
+For further information see http://mvapich.cse.ohio-state.edu/benchmarks/
+
+EOF
+
+# specify which compilers we want to build the tool with
+MAALI_TOOL_COMPILERS="$MAALI_DEFAULT_GCC_COMPILERS"
+
+# URL to download the source code from
+MAALI_URL="http://mvapich.cse.ohio-state.edu/download/mvapich/${MAALI_TOOL_NAME}-${MAALI_TOOL_VERSION}.tar.gz"
+
+# location we are downloading the source code to
+MAALI_DST="$MAALI_SRC/${MAALI_TOOL_NAME}-${MAALI_TOOL_VERSION}.tar.gz"
+
+# where the unpacked source code is located
+MAALI_TOOL_BUILD_DIR="$MAALI_BUILD_DIR/${MAALI_TOOL_NAME}-${MAALI_TOOL_VERSION}"
+
+# type of tool (eg. apps, devel, python, etc.)
+MAALI_TOOL_TYPE="tools"
+
+# tool pre-requisites
+MAALI_TOOL_PREREQ="$MAALI_DEFAULT_MPI"
+
+# for auto-building module files
+MAALI_MODULE_SET_PATH='libexec/osu-micro-benchmarks/mpi/startup '
+MAALI_MODULE_SET_PATH+=' libexec/osu-micro-benchmarks/mpi/pt2pt '
+MAALI_MODULE_SET_PATH+=' libexec/osu-micro-benchmarks/mpi/one-sided '
+MAALI_MODULE_SET_PATH+=' libexec/osu-micro-benchmarks/mpi/collective'
