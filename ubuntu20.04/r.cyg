@@ -26,8 +26,11 @@ MAALI_TOOL_PREREQ=""
 MAALI_TOOL_CONFIGURE="--enable-R-shlib --with-x=no --with-lapack --with-blas"
 # --with-lapack --with-blas"
 #="-fopenmp -I$MKL_HOME/include -L$MKL_HOME/lib/intel64 -lmkl_gf_lp64 -lmkl_gnu_thread -lmkl_core -lpthread -lm"'
-#MAALI_TOOL_CONFIGURE='--enable-R-shlib --with-x=no --with-lapack --with-blas="-fopenmp -I$MKL_HOME/include -L$MKL_HOM
-E/lib/intel64 -lmkl_gf_lp64 -lmkl_gnu_thread -lmkl_core -lpthread -lm"'
+#MAALI_TOOL_CONFIGURE+='--enable-R-shlib --with-x=no --with-lapack '
+#MAALI_TOOL_CONFIGURE+='--with-blas="-fopenmp -I$MKL_HOME/include '
+#MAALI_TOOL_CONFIGURE+=' -L$MKL_HOME/lib/intel64 -lmkl_gf_lp64 '
+#MAALI_TOOL_CONFIGURE+='-lmkl_gnu_thread -lmkl_core -lpthread -lm"'
+
 # for auto-building module files
 MAALI_MODULE_SET_PATH=1
 MAALI_MODULE_SET_R_VERSION=$MAALI_TOOL_VERSION
