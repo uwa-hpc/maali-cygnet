@@ -1,0 +1,37 @@
+##############################################################################
+# maali cygnet file for GNU plot
+##############################################################################
+
+read -r -d '' MAALI_MODULE_WHATIS << EOF
+Molpro is a comprehensive system of ab initio programs for advanced 
+molecular electronic structure calculations, designed and maintained 
+by H.-J. Werner and P. J. Knowles, and containing contributions from 
+many other authors.
+
+For further information see https://www.molpro.net/
+
+EOF
+
+# specify which compilers we want to build the tool with
+MAALI_TOOL_COMPILERS="$MAALI_DEFAULT_PGI_COMPILERS"
+
+# URL to download the source code from
+MAALI_URL=""
+
+# location we are downloading the source code to
+MAALI_DST="$MAALI_SRC/$MAALI_TOOL_NAME-$MAALI_TOOL_VERSION.tar.gz"
+
+# where the unpacked source code is located
+MAALI_TOOL_BUILD_DIR="$MAALI_BUILD_DIR/Molpro"
+
+# type of tool (eg. apps, devel, python, etc.)
+MAALI_TOOL_TYPE="apps"
+
+# add additional configuration options
+
+MAALI_TOOL_CONFIGURE='-mpp  -openmpi -lapackpath=${LAPACK} '
+MAALI_TOOL_CONFIGURE+=' -blaspath=${LAPACK}/lib64 '
+
+# for auto-building module files
+MAALI_MODULE_SET_PATH=1
+MAALI_MODULE_SET_MANPATH=1
