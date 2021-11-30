@@ -1,0 +1,67 @@
+##############################################################################
+# MAALI config file for bowtie2
+##############################################################################
+read -r -d '' MAALI_MODULE_WHATIS << EOF
+
+Bowtie 2 is an ultrafast and memory-efficient tool for aligning 
+sequencing reads to long reference sequences.
+
+For further information see http://bowtie-bio.sourceforge.net/bowtie2/index.shtml
+
+EOF
+# specify which compilers we want to build the tool with
+MAALI_TOOL_COMPILERS="$MAALI_DEFAULT_COMPILERS"
+
+# URL to download the source code from
+MAALI_URL="http://sourceforge.net/projects/bowtie-bio/files/$MAALI_TOOL_NAME/$MAALI_TOOL_VERSION/$MAALI_TOOL_NAME-$MAALI_TOOL_VERSION-source.zip/download"
+
+# location we are downloading the source code to
+MAALI_DST="$MAALI_SRC/$MAALI_TOOL_NAME-$MAALI_TOOL_VERSION-source.zip"
+
+# where the unpacked source code is located
+MAALI_TOOL_BUILD_DIR="$MAALI_BUILD_DIR/$MAALI_TOOL_NAME-$MAALI_TOOL_VERSION"
+
+# type of tool (eg. apps, devel, python, etc.)
+MAALI_TOOL_TYPE="bio-apps"
+
+# tool pre-requisites modules needed to install this new tool/package
+MAALI_TOOL_PREREQ="intel-tbb/2018.4"
+
+# cmake build
+MAALI_TOOL_BUILD_PREREQ="cmake/3.21.3"
+MAALI_CMAKE_TOOL=1
+# need to change MAALI_CMAKE_PATH
+MAALI_CMAKE_PATH=${MAALI_TOOL_BUILD_DIR}/build-$MAALI_TOOL_NAME
+
+# this is the default configuration for new versions!
+
+MAALI_TOOL_CONFIGURE='-DCMAKE_BUILD_TYPE=Release '
+MAALI_TOOL_CONFIGURE+='-DINSTALL_DIR=$MAALI_INSTALL_DIR/bin '
+MAALI_TOOL_CONFIGURE+='-DBUILD_SHARED_LIBS:BOOL=ON '
+MAALI_TOOL_CONFIGURE+='-DBOWTIE_SHARED_MEM:BOOL=ON '
+## this appear to have been dropped in version >=2.4.4
+#MAALI_TOOL_CONFIGURE+='-DLIBTBB:PATH=/uwahpc/devel/intel/2018.4/compilers_and_libraries_2018.5.274/linux/tbb/lib/intel64/gcc4.7/libtbb.so '
+#MAALI_TOOL_CONFIGURE+='-DLIBTBBMALLOC:PATH=/uwahpc/devel/intel/2018.4/compilers_and_libraries_2018.5.274/linux/tbb/lib/intel64/gcc4.7/libtbbmalloc.so '
+#MAALI_TOOL_CONFIGURE+='-DLIBTBBMALLOC_PROXY:PATH=/uwahpc/devel/intel/2018.4/compilers_and_libraries_2018.5.274/linux/tbb/lib/intel64/gcc4.7/libtbbmalloc_proxy.so '
+#MAALI_TOOL_CONFIGURE+='-DTBB_LIB_PATH:PATH=/uwahpc/devel/intel/2018.4/compilers_and_libraries_2018.5.274/linux/tbb/lib/intel64/gcc4.7 '
+#MAALI_TOOL_CONFIGURE+='-DTBBMALLOC_LIB_PATH:PATH=/uwahpc/devel/intel/2018.4/compilers_and_libraries_2018.5.274/linux/tbb/lib/intel64/gcc4.7 '
+#MAALI_TOOL_CONFIGURE+='-DTBB_INCLUDE_PATH:PATH=/uwahpc/devel/intel/2018.4/compilers_and_libraries_2018.5.274/linux/tbb/include '
+
+# for auto-building module files
+MAALI_MODULE_SET_PATH=1
+
+##############################################################################
+function maali_cmake_build {
+  # bowtie2 has a file called bowtie2-build that requires this custom build.
+  # allows late evaluation
+  MAALI_TOOL_CONFIGURE_EVAL=`eval echo "$MAALI_TOOL_CONFIGURE"`
+  # cmake likes to build in a seperate directory. 
+  maali_makedir "$MAALI_TOOL_BUILD_DIR/$MAALI_TOOL_NAME-build"
+
+  cd "$MAALI_TOOL_BUILD_DIR/$MAALI_TOOL_NAME-build"
+
+  maali_run "cmake -DCMAKE_INSTALL_PREFIX=$MAALI_INSTALL_DIR $MAALI_TOOL_CONFIGURE_EVAL ."
+  maali_run "make -j $MAALI_CORES "
+  maali_run "make install"
+
+}
