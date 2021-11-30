@@ -41,7 +41,7 @@ MAALI_TOOL_BUILD_PREREQ=""
 #
 MAALI_TOOL_CONFIGURE='--with-ngs-sdk-prefix=${MAALI_NGS_HOME} '
 MAALI_TOOL_CONFIGURE+='--with-hdf5-prefix=$HDF5_DIR '
-#MAALI_TOOL_CONFIGURE+='--build-prefix=$MAALI_INSTALL_DIR/ncbi-outdir '
+MAALI_TOOL_CONFIGURE+='--build-prefix=$MAALI_INSTALL_DIR/ncbi-vdb '
 
 # for auto-building module files
 
