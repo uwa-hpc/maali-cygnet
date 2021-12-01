@@ -58,3 +58,5 @@ function maali_build {
   maali_run "./configure --prefix=$MAALI_INSTALL_DIR $MAALI_TOOL_CONFIGURE_EVAL"
   maali_run "make -j $MAALI_CORES"
   maali_run "make install"
+
+}
