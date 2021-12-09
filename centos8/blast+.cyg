@@ -1,0 +1,60 @@
+##############################################################################
+# maali cygnet file for BLAST+
+##############################################################################
+read -r -d '' MAALI_MODULE_WHATIS << EOF
+
+BLAST+ (Basic Local Alignment Search Tool) BLAST finds regions of 
+similarity between biological sequences. The program compares 
+nucleotide or protein sequences to sequence databases and calculates 
+the statistical significance.
+
+For further information 
+see https://blast.ncbi.nlm.nih.gov/Blast.cgi?CMD=Web&PAGE_TYPE=BlastHome
+
+EOF
+# specify which compilers we want to build the tool with
+MAALI_TOOL_COMPILERS="$MAALI_DEFAULT_GCC_COMPILERS"
+
+# URL to download the source code from
+MAALI_URL="ftp://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/ncbi-blast-${MAALI_TOOL_VERSION}+-src.tar.gz"
+
+# location we are downloading the source code to
+MAALI_DST="$MAALI_SRC/ncbi-blast-${MAALI_TOOL_VERSION}+-src.tar.gz"
+
+# where the unpacked source code is located
+MAALI_TOOL_BUILD_DIR="$MAALI_BUILD_DIR/ncbi-blast-${MAALI_TOOL_VERSION}+-src"
+
+# type of tool (eg. apps, devel, python, etc.)
+MAALI_TOOL_TYPE="bio-apps"
+
+# tool pre-requisites
+MAALI_TOOL_PREREQ="boost/1.74.0 lapack/3.9.1 hdf5/1.12.0"
+
+# this is the default configuration for new versions!
+MAALI_TOOL_CONFIGURE=' --without-gui '
+MAALI_TOOL_CONFIGURE+=' --without-fastcgi '
+MAALI_TOOL_CONFIGURE+=' --with-lapack=${MAALI_LAPACK_HOME} '
+MAALI_TOOL_CONFIGURE+=' --with-hdf5=${HDF5_DIR} '
+MAALI_TOOL_CONFIGURE+=' --with-boost=${BOOST_ROOT} '
+MAALI_TOOL_CONFIGURE+=' --with-openmp '
+
+# defined environment variable of the basic path  
+MAALI_MODULE_SET_PATH=1
+MAALI_MODULE_SET_BLASTDB='/group/data/blast'
+MAALI_MODULE_SET_BLASTMAT='$MAALI_APP_HOME/data'
+
+##############################################################################
+function maali_build {
+#
+ # allows late evaluation
+  MAALI_TOOL_CONFIGURE_EVAL=`eval echo "$MAALI_TOOL_CONFIGURE"`
+
+  cd "$MAALI_TOOL_BUILD_DIR/c++"
+
+  maali_run "./configure --prefix=$MAALI_INSTALL_DIR $MAALI_TOOL_CONFIGURE_EVAL"
+
+  maali_run "make -j $MAALI_CORES"
+  maali_run "make install"
+}
+
+##############################################################################
