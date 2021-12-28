@@ -3,7 +3,7 @@
 ##############################################################################
 
 read -r -d '' MAALI_MODULE_WHATIS << EOF
-This is an attempt to perform a simple "libraryfication" of the GFF/GTF
+This is an attempt to perform a simple \"libraryfication\" of the GFF/GTF
 parsing code that is used in GFFRead codebase. There are not many (any?) 
 relatively lightweight GTF/GFF parsers exposing a C++ interface, and the 
 goal of this library is to provide this functionality without the necessity 
