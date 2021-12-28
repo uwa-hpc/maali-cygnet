@@ -44,9 +44,7 @@ MAALI_TOOL_BUILD_PREREQ="cmake/3.21.3"
 MAALI_TOOL_CONFIGURE='-DCMAKE_BUILD_TYPE:STRING=Release '
 
 # for auto-building module files
-MAALI_MODULE_SET_PATH=1
 MAALI_MODULE_SET_LD_LIBRARY_PATH=1
-MAALI_MODULE_SET_PKG_CONFIG_PATH=1
 
 
 ##############################################################################
