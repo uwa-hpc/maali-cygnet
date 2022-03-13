@@ -38,8 +38,15 @@ MAALI_MODULE_SET_MANPATH=1
 
 function maali_build {
 
-  cd "$MAALI_TOOL_BUILD_DIR"
-  maali_run "./unix/configure --prefix=$MAALI_INSTALL_DIR "
+  cd "$MAALI_INSTALL_DIR/../"
+  tar -xf $MAALI_DST
+  maali_run "rm -r $MAALI_TOOL_VERSION"
+  maali_run "mv SAOImageDS9 $MAALI_TOOL_VERSION"
+  
+  cd $MAALI_TOOL_VERSION
+  
+  maali_run "./unix/configure "
+
   maali_run "make -j 2 "
   
 }

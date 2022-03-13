@@ -35,10 +35,9 @@ MAALI_MODULE_SET_LD_LIBRARY_PATH=1
 function maali_build {
   cd "${MAALI_TOOL_BUILD_DIR}/linux64"
 
-  sed -i -e 's/\/usr\/local/\${MAALI_INSTALL_DIR}/g' GNUmakefile
-  
-  maali_run "make"
-  maali_run "make install"
+  maali_run "make -e 'PREFIX=${MAALI_INSTALL_DIR}'"
+  maali_run "make install -e 'PREFIX=${MAALI_INSTALL_DIR}' "
+
 }
 
 ##############################################################################
