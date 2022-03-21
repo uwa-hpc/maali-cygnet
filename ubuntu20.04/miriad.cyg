@@ -1,0 +1,70 @@
+##############################################################################
+# maali config file for miriad 
+##############################################################################
+read -r -d ''MAALI_MODULE_WHATIS << EOF
+
+Miriad is a radio interferometry data reduction package of particular 
+interest to users of the Australia Telescope Compact Array (ATCA). It 
+can be used for the reduction of continuum and spectral line 
+observations from beginning to end, starting with the loading of the 
+data (either FITS, the ATNF RPFITS or old BIMA formats) through to 
+image synthesis, analysis and display with publication quality graphics.
+
+For further information see: https://www.atnf.csiro.au/computing/software/miriad/
+EOF
+
+# specify which compilers we want to build the tool with
+MAALI_TOOL_COMPILERS="$MAALI_DEFAULT_COMPILERS"
+
+# URL to download the source code from
+MAALI_URL="ftp://ftp.atnf.csiro.au/pub/software/${MAALI_TOOL_NAME}/${MAALI_TOOL_NAME}-${MAALI_TOOL_VERSION}.tar.bz2"
+
+# location we are downloading the source code to
+MAALI_DST="$MAALI_SRC/$MAALI_TOOL_NAME-$MAALI_TOOL_VERSION.tar.bz2"
+
+# where the unpacked source code is located
+MAALI_TOOL_BUILD_DIR="$MAALI_INSTALL_DIR"
+
+# type of tool (eg. apps, devel, python, etc.)
+MAALI_TOOL_TYPE="apps"
+
+# tool pre-requisites
+MAALI_TOOL_PREREQ="rpfits/2.25 wcslib/7.7"
+
+# add additional configure options
+MAALI_TOOL_CONFIGURE='--with-rpfits=${MAALI_RPFITS_HOME}/lib '
+MAALI_TOOL_CONFIGURE+='--with-wcslib=${MAALI_WCSLIB_HOME}/lib '
+
+# for auto-building module files
+MAALI_INSTALL_DIR='${MAALI_INSTALL_DIR}/../..'
+
+MAALI_MODULE_SET_PATH=1
+MAALI_MODULE_SET_MANPATH=1
+MAALI_MODULE_SET_MIR='$MAALI_INSTALL_DIR'
+MAALI_MODULE_SET_MIRCAT='$MAALI_INSTALL_DIR/cat'
+MAALI_MODULE_SET_MIRPDOC='$MAALI_INSTALL_DIR/doc'
+MAALI_MODULE_SET_MIRPROG='$MAALI_INSTALL_DIR/prog'
+MAALI_MODULE_SET_MIRSUBS='$MAALI_INSTALL_DIR/subs'
+MAALI_MODULE_SET_MIRMAN='$MAALI_INSTALL_DIR/man'
+MAALI_MODULE_SET_MIRARCH='$MAALI_INSTALL_DIR/scripts/mirarch'
+
+
+##############################################################################
+function maali_build {
+  MAALI_TOOL_CONFIGURE_EVAL=`eval echo "$MAALI_TOOL_CONFIGURE"`
+  cd "${MAALI_INSTALL_DIR}/../.."
+  echo dir is `pwd`
+  tar -xf $MAALI_DST
+  # down load the miriad common file to MAALI_SRC
+  wget -P ${MAALI_SRC} ftp://ftp.atnf.csiro.au/pub/software/miriad/miriad-common.tar.bz2
+  tar -xf ${MAALI_SRC}/miriad-common.tar.bz2
+
+  cd "${MAALI_TOOL_NAME}"
+  rm -rf code
+  
+  maali_run "./configure ${MAALI_TOOL_CONFIGURE_EVAL}"
+  maali_run "make -j 2"
+  #maali_run "make install"
+}
+
+##############################################################################
