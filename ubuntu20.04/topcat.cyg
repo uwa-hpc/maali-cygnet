@@ -1,0 +1,47 @@
+##############################################################################
+# maali config file for topcat 
+##############################################################################
+
+read -r -d ''MAALI_MODULE_WHATIS << EOF
+TOPCAT is an interactive graphical viewer and editor for tabular data. 
+Its aim is to provide most of the facilities that astronomers need for 
+analysis and manipulation of source catalogues and other tables, though 
+it can be used for non-astronomical data as well. It understands a 
+number of different astronomically important formats (including FITS, 
+VOTable and CDF) and more formats can be added. It is especially good 
+at interactive exploration of large (multi-million row, lots of columns) 
+tables.
+  
+For further information see: http://www.star.bris.ac.uk/~mbt/topcat/
+
+EOF
+
+# specify which compilers we want to build the tool with
+MAALI_TOOL_COMPILERS="$MAALI_DEFAULT_GCC_COMPILERS"
+
+# URL to download the source code from
+MAALI_URL="http://www.star.bris.ac.uk/~mbt/topcat/$MAALI_TOOL_NAME-full.jar"
+
+# location we are downloading the source code to
+MAALI_DST="$MAALI_SRC/${MAALI_TOOL_NAME}-full.jar"
+
+# type of tool (eg. apps, devel, python, etc.)
+MAALI_TOOL_TYPE="apps"
+
+# add additional configure options
+MAALI_TOOL_CONFIGURE=' '
+
+# for auto-building module files
+MAALI_MODULE_SET_PATH=1
+
+##############################################################################
+
+function maali_build {
+  
+  mkdir -p $MAALI_INSTALL_DIR/bin
+  cd $MAALI_INSTALL_DIR/bin
+  cp $MAALI_DST .
+  maali_run "wget http://www.star.bris.ac.uk/~mbt/topcat/topcat"
+  maali_run "chmod 755 topcat"
+  
+}
