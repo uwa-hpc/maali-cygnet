@@ -1,0 +1,77 @@
+##############################################################################
+# maali cygnet file for dbcsr 
+##############################################################################
+
+read -r -d '' MAALI_MODULE_WHATIS << EOF
+
+DBCSR is a standalone sparse matrix library designed to efficiently perform 
+sparse matrix matrix multiplication, among other operations. It is MPI and 
+OpenMP parallel, and can exploit accelerators.
+
+For further information see https://www.cp2k.org/dbcsr
+EOF
+
+# specify which compilers we want to build the tool with
+MAALI_TOOL_COMPILERS="$MAALI_DEFAULT_INTEL_COMPILERS"
+
+# URL to download the source code from - need to register
+MAALI_URL="https://github.com/cp2k/${MAALI_TOOL_NAME}/archive/refs/tags/v${MAALI_TOOL_VERSION}.tar.gz"
+
+# location we are downloading the source code to
+MAALI_DST="$MAALI_SRC/v$MAALI_TOOL_VERSION.tar.gz"
+
+# where the unpacked source code is located
+MAALI_TOOL_BUILD_DIR="$MAALI_BUILD_DIR/$MAALI_TOOL_NAME-$MAALI_TOOL_VERSION"
+
+# type of tool (eg. apps, devel, python, etc.)
+MAALI_TOOL_TYPE="devel"
+
+# tool pre-requisites modules needed to install this new tool/package
+MAALI_TOOL_PREREQ="intel/2020.4 intel-mkl/2020.4 cuda/11.0 "
+
+# cmake build
+MAALI_TOOL_BUILD_PREREQ="cmake/3.21.3"
+MAALI_CMAKE_TOOL=1
+
+# this is the default configuration for new versions!
+MAALI_TOOL_CONFIGURE='-DCMAKE_BUILD_TYPE=Release '
+MAALI_TOOL_CONFIGURE+='-DBLA_VENDOR=Intel10_64lp_seq '
+MAALI_TOOL_CONFIGURE+='-DBUILD_SHARED_LIBS:BOOL=ON '
+MAALI_TOOL_CONFIGURE+='-DUSE_MPI=ON '
+MAALI_TOOL_CONFIGURE+='-DUSE_OPENMP=ON '
+MAALI_TOOL_CONFIGURE+='-DUSE_SMM=blas '
+MAALI_TOOL_CONFIGURE+='-DUSE_ACCEL=cuda '
+MAALI_TOOL_CONFIGURE+='-DWITH_CUDA_PROFILING=ON '
+MAALI_TOOL_CONFIGURE+='-DWITH_C_API=ON '
+MAALI_TOOL_CONFIGURE+='-DWITH_EXAMPLES=OFF '
+MAALI_TOOL_CONFIGURE+='-DWITH_GPU=V100 '
+MAALI_TOOL_CONFIGURE+='-DBUILD_TESTING=OFF '
+#MAALI_TOOL_CONFIGURE+='-DTEST_MPI_RANKS=36 '
+#MAALI_TOOL_CONFIGURE+='-DTEST_OMP_THREADS=12 '
+
+# for auto-building module files
+MAALI_MODULE_SET_PATH=1
+MAALI_MODULE_SET_PKG_CONFIG_PATH=1
+
+##############################################################################
+
+function maali_cmake_build {
+
+ # allows late evaluation
+  MAALI_TOOL_CONFIGURE_EVAL=`eval echo "$MAALI_TOOL_CONFIGURE"`
+# add fypp to build src 
+ cd $MAALI_TOOL_BUILD_DIR/tools/build_utils 
+ wget https://github.com/aradi/fypp/archive/refs/tags/3.1.tar.gz
+ rm -r fypp
+ tar -xvf 3.1.tar.gz
+ mv fypp-3.1 fypp
+ 
+ maali_makedir "$MAALI_TOOL_BUILD_DIR/$MAALI_TOOL_NAME-build"
+ cd "$MAALI_TOOL_BUILD_DIR/$MAALI_TOOL_NAME-build"
+
+ maali_run "cmake -DCMAKE_INSTALL_PREFIX=$MAALI_INSTALL_DIR .."
+ maali_run "make -j $MAALI_CORES"
+ maali_run "make install"
+}
+
+##############################################################################
