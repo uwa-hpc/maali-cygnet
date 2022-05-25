@@ -1,0 +1,37 @@
+##############################################################################
+# maali config file for cfitsio 
+##############################################################################
+read -r -d ''MAALI_MODULE_WHATIS << EOF
+
+CFITSIO is a library of C and Fortran subroutines for reading and writing 
+data files in FITS (Flexible Image Transport System) data format. CFITSIO 
+provides simple high-level routines for reading and writing FITS files 
+that insulate the programmer from the internal complexities of the FITS 
+format. 
+
+For further information see: https://heasarc.gsfc.nasa.gov/fitsio/
+
+EOF
+
+# specify which compilers we want to build the tool with
+MAALI_TOOL_COMPILERS="$MAALI_DEFAULT_GCC_COMPILERS"
+
+# URL to download the source code from
+MAALI_URL="https://heasarc.gsfc.nasa.gov/FTP/software/fitsio/c/${MAALI_TOOL_NAME}-${MAALI_TOOL_VERSION}.tar.gz"
+
+# location we are downloading the source code to
+MAALI_DST="$MAALI_SRC/$MAALI_TOOL_NAME-$MAALI_TOOL_VERSION.tar.gz"
+
+# where the unpacked source code is located
+MAALI_TOOL_BUILD_DIR="$MAALI_BUILD_DIR/$MAALI_TOOL_NAME-$MAALI_TOOL_VERSION"
+
+# type of tool (eg. apps, devel, python, etc.)
+MAALI_TOOL_TYPE="apps"
+
+# for auto-building module files
+##############################################################################
+MAALI_MODULE_SET_PKG_CONFIG_PATH=1
+MAALI_MODULE_SET_LD_LIBRARY_PATH=1
+
+
+##############################################################################
