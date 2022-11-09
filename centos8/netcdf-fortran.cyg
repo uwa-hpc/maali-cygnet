@@ -28,8 +28,13 @@ MAALI_TOOL_TYPE="devel"
 # add additional configure options
 MAALI_TOOL_CONFIGURE='--enable-shared '
 MAALI_TOOL_CONFIGURE+='--disable-doxygen '
-#MAALI_TOOL_CONFIGURE+='-DNETCDF_C_INCLUDE_DIR:PATH=$NETCDF/include '
 
+if [ "$MAALI_COMPILER_NAME" == "intel" ] || [ "$MAALI_COMPILER_NAME" == "compiler" ]; then
+        MAALI_TOOL_CONFIGURE+=' CC="icc" FC="ifort" '
+fi
+MAALI_TOOL_CONFIGURE+='LDFLAGS="-L$NETCDF/lib64 " '
+MAALI_TOOL_CONFIGURE+='LD_LIBRARY_PATH="$MAALI_NETCDFC_HOME/lib64:$LD_LIBRARY_PATH" '
+#
 # tool pre-requisites
 MAALI_TOOL_PREREQ="szip/2.1.1 zlib/1.2.11 hdf5/1.12.0 netcdf-c/4.8.1"
 
@@ -37,28 +42,22 @@ MAALI_TOOL_PREREQ="szip/2.1.1 zlib/1.2.11 hdf5/1.12.0 netcdf-c/4.8.1"
 #MAALI_TOOL_BUILD_PREREQ="cmake/3.21.3"
 # for auto-building module files
 
-MAALI_MODULE_SET_NETCDF-FORTRAN="$MAALI_APP_HOME"
+#MAALI_MODULE_SET_NETCDF-FORTRAN="$MAALI_APP_HOME"
 MAALI_MODULE_SET_PATH=1
 MAALI_MODULE_SET_LD_LIBRARY_PATH=1
 MAALI_MODULE_SET_MANPATH=1
 MAALI_MODULE_SET_PKG_CONFIG_PATH=1
 
 ###############################################################################
-function maali_build {
-  MAALI_TOOL_CONFIGURE_EVAL=`eval echo "$MAALI_TOOL_CONFIGURE"`
-  
- #export CFLAGS=""
- #export CPPFLAGS="-I$MAALI_INSTALL_DIR/include -L$MAALI_INSTALL_DIR/lib"
- #export FCFLAGS="-I$MAALI_INSTALL_DIR/include -L$MAALI_INSTALL_DIR/lib"
- export LDFLAGS="-L$NETCDF/lib"
- export LD_LIBRARY_PATH="$MAALI_NETCDFC_HOME/lib:$LD_LIBRARY_PATH"
-
-  maali_run "./configure --prefix=$MAALI_INSTALL_DIR $MAALI_TOOL_CONFIGURE_EVAL"
-  maali_run "make -j $MAALI_CORES"
-  maali_run "make install"
-
-
-}
+#function maali_build {
+#  MAALI_TOOL_CONFIGURE_EVAL=`eval echo "$MAALI_TOOL_CONFIGURE"`
+#  
+#  maali_run "./configure $MAALI_FLAGS --prefix=$MAALI_INSTALL_DIR $MAALI_TOOL_CONFIGURE_EVAL"
+#  maali_run "make -j $MAALI_CORES"
+#  maali_run "make install"
+#
+#
+#}
 
 
 
