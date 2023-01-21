@@ -26,7 +26,7 @@ MAALI_TOOL_COMPILERS="$MAALI_DEFAULT_INTEL_COMPILERS"
 MAALI_URL="https://github.com/xiaoyeli/${MAALI_TOOL_NAME}/archive/refs/tags/v${MAALI_TOOL_VERSION}.tar.gz"
 
 # location we are downloading the source code to
-MAALI_DST="$MAALI_SRC/v${MAALI_TOOL_VERSION}.tar.gz"
+MAALI_DST="$MAALI_SRC/${MAALI_TOOL_NAME}/v${MAALI_TOOL_VERSION}.tar.gz"
 
 # where the unpacked source code is located
 MAALI_TOOL_BUILD_DIR="$MAALI_BUILD_DIR/${MAALI_TOOL_NAME}-${MAALI_TOOL_VERSION}"
