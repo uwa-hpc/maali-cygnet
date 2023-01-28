@@ -1,0 +1,48 @@
+##############################################################################
+# maali cygnet file for salmon
+##############################################################################
+
+read -r -d '' MAALI_MODULE_WHATIS << EOF
+Salmon is a tool for quantifying the expression of transcripts using RNA-seq 
+data. Salmon uses new algorithms (specifically, coupling the concept of 
+quasi-mapping with a two-phase inference procedure) to provide accurate 
+expression estimates very quickly (i.e. wicked-fast) and while using 
+little memory. Salmon performs its inference using an expressive and 
+realistic model of RNA-seq data that takes into account experimental 
+attributes and biases commonly observed in real RNA-seq data.
+
+For further information see https://combine-lab.github.io/salmon/
+
+EOF
+
+# specify which compilers we want to build the tool with
+MAALI_TOOL_COMPILERS="$MAALI_DEFAULT_GCC_COMPILERS"
+
+# URL to download the source code from
+MAALI_URL="https://github.com/COMBINE-lab/${MAALI_TOOL_NAME}/archive/refs/tags/v${MAALI_TOOL_VERSION}.tar.gz"
+
+# location we are downloading the source code to
+MAALI_DST="$MAALI_SRC/$MAALI_TOOL_NAME/v$MAALI_TOOL_VERSION.tar.gz"
+
+# where the unpacked source code is located
+MAALI_TOOL_BUILD_DIR="$MAALI_BUILD_DIR/$MAALI_TOOL_NAME-$MAALI_TOOL_VERSION"
+
+
+# type of tool (eg. apps, devel, python, etc.)
+MAALI_TOOL_TYPE="bio-apps"
+
+# tool pre-requisites
+# Salmon v1.6.0 28/12/2021 throw depreciation code warnings with newer boost versions 
+MAALI_TOOL_PREREQ=" "
+
+# tool build pre-requisites - not added to the module, only needed for building (loaded after MAALI_TOOL_PREREQ)
+MAALI_TOOL_BUILD_PREREQ="cmake/3.21.3"
+
+#add additional configure options
+MAALI_TOOL_CONFIGURE='-DFETCH_BOOST=TRUE '
+
+# for auto-building module files
+MAALI_MODULE_SET_PATH=1
+MAALI_MODULE_SET_LD_LIBRARY_PATH=1
+
+##############################################################################
