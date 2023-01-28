@@ -1,0 +1,69 @@
+##############################################################################
+# maali cygnet file for superlu_dist
+##############################################################################
+
+read -r -d '' MAALI_MODULE_WHATIS << EOF
+SuperLU_DIST is a general purpose library for the direct solution of large, 
+sparse, nonsymmetric systems of linear equations. The library is written in C 
+and is callable from either C or Fortran program. It uses MPI, OpenMP and 
+CUDA to support various forms of parallelism. It supports both real and 
+complex datatypes, both single and double precision, and 64-bit integer 
+indexing. The library routines performs an LU decomposition with partial 
+pivoting and triangular system solves through forward and back substitution. 
+The LU factorization routines can handle non-square matrices but the 
+triangular solves are performed only for square matrices.
+
+
+For further information see:
+ https://portal.nersc.gov/project/sparse/superlu/
+
+EOF
+
+# specify which compilers we want to build the tool with
+MAALI_TOOL_COMPILERS="$MAALI_DEFAULT_INTEL_COMPILERS"
+
+# URL to download the source code from
+MAALI_URL="https://github.com/xiaoyeli/${MAALI_TOOL_NAME}/archive/refs/tags/v${MAALI_TOOL_VERSION}.tar.gz"
+
+# location we are downloading the source code to
+MAALI_DST="$MAALI_SRC/${MAALI_TOOL_NAME}/v${MAALI_TOOL_VERSION}.tar.gz"
+
+# where the unpacked source code is located
+MAALI_TOOL_BUILD_DIR="$MAALI_BUILD_DIR/${MAALI_TOOL_NAME}-${MAALI_TOOL_VERSION}"
+
+# type of tool (eg. apps, devel, python, etc.)
+MAALI_TOOL_TYPE="apps"
+
+# tool pre-requisites modules needed to install this new tool/package
+MAALI_TOOL_PREREQ="compiler/2023.0.0 mpi/2021.8.0 mkl/2023.0.0 metis/5.1.0 parmetis/4.0.3"
+
+# tool build pre-requisites - not added to the module, only needed for building (loaded after MAALI_TOOL_PREREQ)
+MAALI_TOOL_BUILD_PREREQ="cmake/3.25.2"
+
+# add additional configure options
+MAALI_TOOL_CONFIGURE='-DCMAKE_BUILD_TYPE:STRING=Release '
+#MAALI_TOOL_CONFIGURE+='-DBUILD_STATIC_LIBS=ON '
+MAALI_TOOL_CONFIGURE+='-DBUILD_TESTING=ON '
+#MAALI_TOOL_CONFIGURE+='-DTPL_ENABLE_INTERNAL_BLASLIB=ON '
+MAALI_TOOL_CONFIGURE+='-DTPL_ENABLE_LAPACKLIB=ON '
+MAALI_TOOL_CONFIGURE+='-DTPL_LAPACK_LIBRARIES=${MKLROOT}/lib/intel64/libmkl_lapack95_ilp64.a '
+MAALI_TOOL_CONFIGURE+='-Denable_tests=ON '
+MAALI_TOOL_CONFIGURE+='-Denable_single=ON '
+MAALI_TOOL_CONFIGURE+='-Denable_double=ON '
+MAALI_TOOL_CONFIGURE+='-Denable_complex=ON '
+MAALI_TOOL_CONFIGURE+='-Denable_complex16=ON '
+MAALI_TOOL_CONFIGURE+='-DTPL_BLAS_LIBRARIES=${MKLROOT}/lib/intel64/libmkl_blas95_ilp64.a '
+MAALI_TOOL_CONFIGURE+='-DTPL_PARMETIS_LIBRARIES=${MAALI_PARMETIS_HOME}/lib/libparmetis.so '
+MAALI_TOOL_CONFIGURE+='-DTPL_PARMETIS_INCLUDE_DIRS=${MAALI_PARMETIS_HOME}/include '
+MAALI_TOOL_CONFIGURE+='-DCMAKE_C_COMPILER:STRING=icx '
+MAALI_TOOL_CONFIGURE+='-DCMAKE_EXE_LINKER_FLAGS="-I{MKLROOT}/include -L{MKLROOT}/lib/intel64 -lmkl_intel_ilp64 -lmkl_tbb_thread -lmkl_core" '
+
+
+
+# for auto-building module files
+MAALI_MODULE_SET_SuperLUroot ='$MAALI_INSTALL_DIR'
+MAALI_MODULE_SET_SUPERLU_LIB='$MAALI_INSTALL_DIR/lib64/libsuperlu_dist.a '
+MAALI_MODULE_SET_LD_LIBRARY_PATH='$MAALI_INSTALL_DIR/lib64'
+MAALI_MODULE_SET_PKG_CONFIG_PATH=1
+
+##############################################################################
