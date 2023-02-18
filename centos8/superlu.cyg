@@ -35,10 +35,10 @@ MAALI_TOOL_BUILD_DIR="$MAALI_BUILD_DIR/${MAALI_TOOL_NAME}-${MAALI_TOOL_VERSION}"
 MAALI_TOOL_TYPE="apps"
 
 # tool pre-requisites modules needed to install this new tool/package
-MAALI_TOOL_PREREQ="compiler/2023.0.0 mkl/2023.0.0"
+MAALI_TOOL_PREREQ="compiler/2023.0.0 "
 
 # tool build pre-requisites - not added to the module, only needed for building (loaded after MAALI_TOOL_PREREQ)
-MAALI_TOOL_BUILD_PREREQ="cmake/3.21.3"
+MAALI_TOOL_BUILD_PREREQ="cmake/3.25.2"
 
 # add additional configure options
 MAALI_TOOL_CONFIGURE='-DCMAKE_BUILD_TYPE:STRING=Release '
@@ -48,9 +48,9 @@ MAALI_TOOL_CONFIGURE+='-Denable_single=ON '
 MAALI_TOOL_CONFIGURE+='-Denable_double=ON '
 MAALI_TOOL_CONFIGURE+='-Denable_complex=ON '
 MAALI_TOOL_CONFIGURE+='-Denable_complex16=ON '
-MAALI_TOOL_CONFIGURE+='-DTPL_BLAS_LIBRARIES=${MKLROOT}/lib/intel64/libmkl_blas95_ilp64.a '
-MAALI_TOOL_CONFIGURE+='-DCMAKE_C_COMPILER:STRING=icx '
-MAALI_TOOL_CONFIGURE+='-DCMAKE_EXE_LINKER_FLAGS="-I{MKLROOT}/include -L{MKLROOT}/lib/intel64 -lmkl_intel_ilp64 -lmkl_tbb_thread -lmkl_core" '
+MAALI_TOOL_CONFIGURE+='-Denable_internal_blaslib=ON '
+MAALI_TOOL_CONFIGURE+='-DCMAKE_C_COMPILER=icx '
+MAALI_TOOL_CONFIGURE+='-DCMAKE_Fortran_COMPILER=ifx '
 
 # for auto-building module files
 MAALI_MODULE_SET_SuperLU='$MAALI_INSTALL_DIR'
