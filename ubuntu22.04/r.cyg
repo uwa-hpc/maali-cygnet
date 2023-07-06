@@ -1,0 +1,50 @@
+##############################################################################
+# maali cygnet file for R
+##############################################################################
+
+# specify which compilers we want to build the tool with
+MAALI_TOOL_COMPILERS="$MAALI_DEFAULT_COMPILERS"
+
+# URL to download the source code from
+MAALI_URL="http://cran.csiro.au/src/base/R-$MAALI_TOOL_MAJOR_VERSION/$MAALI_TOOL_NAME_ORIG-$MAALI_TOOL_VERSION.tar.gz"
+
+# location we are downloading the source code to
+MAALI_DST="$MAALI_SRC/$MAALI_TOOL_NAME_ORIG-$MAALI_TOOL_VERSION.tar.gz"
+
+# where the unpacked source code is located
+MAALI_TOOL_BUILD_DIR="$MAALI_BUILD_DIR/$MAALI_TOOL_NAME_ORIG-$MAALI_TOOL_VERSION"
+
+MAALI_INSTALL_DIR="$MAALI_ROOT/apps/$MAALI_TOOL_NAME/$MAALI_TOOL_VERSION"
+MAALI_SYSTEM_CYGNET_FILE=1
+# packages that need to be installed in the operating system for this build to work
+#MAALI_SYSTEM_PACKAGES_PREREQ=' '
+
+# tool pre-requisites
+MAALI_TOOL_PREREQ=""
+
+# add additional configure options
+MAALI_TOOL_CONFIGURE="--enable-R-shlib --with-x=no --with-lapack --with-blas"
+# --with-lapack --with-blas"
+#="-fopenmp -I$MKL_HOME/include -L$MKL_HOME/lib/intel64 -lmkl_gf_lp64 -lmkl_gnu_thread -lmkl_core -lpthread -lm"'
+#MAALI_TOOL_CONFIGURE+='--enable-R-shlib --with-x=no --with-lapack '
+#MAALI_TOOL_CONFIGURE+='--with-blas="-fopenmp -I$MKL_HOME/include '
+#MAALI_TOOL_CONFIGURE+=' -L$MKL_HOME/lib/intel64 -lmkl_gf_lp64 '
+#MAALI_TOOL_CONFIGURE+='-lmkl_gnu_thread -lmkl_core -lpthread -lm"'
+
+# for auto-building module files
+MAALI_MODULE_SET_PATH=1
+MAALI_MODULE_SET_R_VERSION=$MAALI_TOOL_VERSION
+
+##############################################################################
+
+function maali_build {
+  # this is the core function for creating software
+
+  # allows late evaluation
+  MAALI_TOOL_CONFIGURE_EVAL=`eval echo "$MAALI_TOOL_CONFIGURE"`
+  cd "$MAALI_TOOL_BUILD_DIR"
+  maali_run "./configure --prefix=$MAALI_INSTALL_DIR $MAALI_TOOL_CONFIGURE_EVAL"
+  maali_run "make"
+#  maali_run "make check"
+  maali_run "make install"
+}
