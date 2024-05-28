@@ -40,6 +40,10 @@ function maali_unpack {
 ##############################################################################
 
 function maali_build {
+  echo "Install dir is $MAALI_INSTALL_DIR"
+  echo "Maali tool build dir is $MAALI_TOOL_BUILD_DIR"
+  echo "Maali source dir is $MAALI_SRC"
+  mkdir -p $MAALI_TOOL_BUILD_DIR
   cd "$MAALI_TOOL_BUILD_DIR"
   mkdir -p  $MAALI_INSTALL_DIR
   cd $MAALI_INSTALL_DIR
