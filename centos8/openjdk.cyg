@@ -12,7 +12,7 @@ EOF
 MAALI_TOOL_COMPILERS="binary"
 
 # URL to download the source code from
-MAALI_URL="https://download.java.net/java/GA/jdk17.0.2/dfd4a8d0985749f896bed50d7138ee7f/8/GPL/openjdk-17.0.2_linux-x64_bin.tar.gz"
+MAALI_URL="https://download.java.net/java/GA/jdk22/830ec9fcccef480bb3e73fb7ecafe059/36/GPL/openjdk-22_linux-x64_bin.tar.gz"
 
 # location we are downloading the source code to
 MAALI_DST="$MAALI_SRC/"$MAALI_TOOL_NAME"_v"$MAALI_TOOL_VERSION"_linux-x64.tar.gz"
