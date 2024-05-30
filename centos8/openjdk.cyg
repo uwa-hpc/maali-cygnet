@@ -34,22 +34,18 @@ MAALI_MODULE_SET_JAVA_HOME='$MAALI_APP_HOME'
 ##############################################################################
 
 function maali_unpack {
-  log ".. supressing unpacking java source as it builds in place"
+  maali_run "mkdir -p $MAALI_TOOL_BUILD_DIR"
+  maali_run "tar -xvzf $MAALI_DST -C $MAALI_TOOL_BUILD_DIR"
 }
 
 ##############################################################################
 
 function maali_build {
-  echo "Install dir is $MAALI_INSTALL_DIR"
-  echo "Maali tool build dir is $MAALI_TOOL_BUILD_DIR"
-  echo "Maali source dir is $MAALI_SRC"
-  mkdir -p $MAALI_TOOL_BUILD_DIR
-  cd "$MAALI_TOOL_BUILD_DIR"
-  mkdir -p  $MAALI_INSTALL_DIR
-  cd $MAALI_INSTALL_DIR
-  cd ..
-  mv -v ./jdk-"$MAALI_TOOL_VERSION"/* $MAALI_INSTALL_DIR
-  rm -rf ./jdk-$MAALI_TOOL_VERSION
+  maali_run "cd $MAALI_TOOL_BUILD_DIR"
+  maali_run "mkdir -p  $MAALI_INSTALL_DIR"
+  maali_run "cd .."
+  maali_run "mv -v ./jdk-"$MAALI_TOOL_VERSION"/* $MAALI_INSTALL_DIR"
+  maali_run "rm -rf ./jdk-$MAALI_TOOL_VERSION"
 }
 
 ##############################################################################
