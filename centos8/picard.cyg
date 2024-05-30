@@ -22,8 +22,8 @@ MAALI_TOOL_TYPE="bio-apps"
 MAALI_TOOL_PREREQ="openjdk/17.0.2"
 
 ## These are boolean options set to 1 to add to module
-MAALI_MODULE_SET_PICARD_LIB='$MAALI_INSTALL_DIR/dist'
-#MAALI_MODULE_SET_SETENV='PICARD_LIB=$MAALI_INSTALL_DIR/dist'
+MAALI_MODULE_SET_PICARD_LIB='$MAALI_INSTALL_DIR/build/libs/picard.jar'
+#MAALI_MODULE_SET_SETENV='PICARD_LIB=$MAALI_INSTALL_DIR/build/libs/picard.jar'
 # Description of what the package/tool is.
 MAALI_MODULE_WHATIS="A set of tools (in Java) for working with next generation sequencing data in the BAM (http://samtools.sourcef
 orge.net) format."
