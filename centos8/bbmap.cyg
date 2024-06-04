@@ -1,0 +1,68 @@
+##############################################################################
+# MAALI config file for FastQC
+##############################################################################
+
+read -r -d ''MAALI_MODULE_WHATIS << EOF
+
+"BBTools is a suite of fast, multithreaded bioinformatics tools designed for analysis of DNA and RNA sequence data. BBTools can handle common sequencing file formats such as fastq, fasta, sam, scarf, fasta+qual, compressed or raw, with autodetection of quality encoding and interleaving. It is written in Java and works on any platform supporting Java, including Linux, MacOS, and Microsoft Windows and Linux; there are no dependencies other than Java (version 7 or higher). Program descriptions and options are shown when running the shell scripts with no parameters. For more information see https://jgi.doe.gov/data-and-tools/software-tools/bbtools/"
+
+EOF
+
+# specify which compilers we want to build the tool with
+MAALI_TOOL_COMPILERS="binary"
+
+# URL to download the source code from
+MAALI_URL="https://sourceforge.net/projects/bbmap/files/latest/download"
+
+# location we are downloading the source code to
+MAALI_DST=$MAALI_SRC/"$MAALI_TOOL_NAME"_"$MAALI_TOOL_VERSION".tar.gz
+
+# where the unpacked source code is located
+MAALI_TOOL_BUILD_DIR=$MAALI_BUILD_DIR/"$MAALI_TOOL_NAME"_"$MAALI_TOOL_VERSION"
+
+# type of tool (eg. apps, devel, python, etc.)
+MAALI_TOOL_TYPE="bio-apps"
+
+# tool pre-requisites
+MAALI_TOOL_PREREQ="openjdk/22.0.1"
+
+# for auto-building module files
+MAALI_MODULE_SET_PATH=1
+MAALI_MODULE_SET_BBMAP_DIR='$MAALI_INSTALL_DIR/bin'
+
+##############################################################################
+
+function maali_build {
+  maali_run "mkdir -p "$MAALI_TOOL_BUILD_DIR""
+  maali_run "tar -xvzf "$MAALI_DST" -C "$MAALI_TOOL_BUILD_DIR""
+  maali_run "cd "$MAALI_TOOL_BUILD_DIR""
+  maali_run "mkdir -p  "$MAALI_INSTALL_DIR/bin""
+  maali_run "mv -v ./bbmap/* "$MAALI_INSTALL_DIR"/bin"
+}
+
+##############################################################################
+
+#function MAALI_module {
+
+#cat <<EOF >$MAALI_TOOL_MODULE
+#%Module######################################################################
+#
+# $MAALI_TOOL modulefile
+#
+#proc ModulesHelp { } {
+#  puts stderr "Sets up the paths you need to use $MAALI_TOOL version $version"
+#}
+#set sys     [uname sysname]
+#set version $MAALI_TOOL_VERSION
+#set tool    $MAALI_TOOL_NAME
+#if { [is-loaded \$tool] && ! [is-loaded \$tool/\$version] } {
+#  module unload \$tool
+#}
+
+#module load apps/openjdk/22.0.1
+
+#prepend-path PATH "$MAALI_INSTALL_DIR/bin"
+#EOF
+#}
+
+##############################################################################
