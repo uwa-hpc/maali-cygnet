@@ -28,7 +28,7 @@ MAALI_TOOL_PREREQ="openjdk/22.0.1"
 
 # for auto-building module files
 MAALI_MODULE_SET_PATH=1
-MAALI_MODULE_SET_BBMAP_DIR='$MAALI_INSTALL_DIR/bin'
+MAALI_MODULE_SET_MAALI_BBMAP_HOME='$MAALI_INSTALL_DIR/bin'
 
 ##############################################################################
 
