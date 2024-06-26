@@ -1,0 +1,51 @@
+##############################################################################
+# maali cygnet file for GHOSTSC
+##############################################################################
+
+read -r -d ''MAALI_MODULE_WHATIS << EOF
+
+"Ghostscript is an interpreter for the PostScript®  language and PDF files. It is available under either the GNU GPL Affero license or  licensed for commercial use from Artifex Software, Inc. It has been under active development for over 30 years and has been ported to several different systems during this time. Ghostscript consists of a PostScript interpreter layer and a graphics library.
+
+There are a family of other products, including GhostPCL, GhostPDF, and GhostXPS that are built upon the same graphics library. Between them, this family of products offers native rendering of all major page description languages. Our latest product, GhostPDL, pulls all these languages into a single executable. For more information see https://ghostscript.readthedocs.io/en/latest/Readme.html"
+
+EOF
+
+# specify which compilers we want to build the tool with
+MAALI_TOOL_COMPILERS="${MAALI_DEFAULT_GCC_COMPILERS}"
+
+# URL to download the source code from 
+MAALI_URL="https://github.com/ArtifexSoftware/ghostpdl-downloads/releases/download/gs10031/ghostpdl-10.03.1.tar.gz"
+
+# location we are downloading the source code to
+MAALI_DST="$MAALI_SRC/ghostpdl-"$MAALI_TOOL_VERSION".tar.gz"
+
+# where the unpacked source code is located
+MAALI_TOOL_BUILD_DIR="$MAALI_BUILD_DIR/$MAALI_TOOL_NAME-$MAALI_TOOL_VERSION"
+
+# type of tool (eg. apps, devel, python, etc.)
+MAALI_TOOL_TYPE="apps"
+
+# tool pre-requisites modules needed to install this new tool/package
+MAALI_TOOL_PREREQ=""
+
+# tool build pre-requisites - not added to the module, only needed for building (loaded after MAALI_TOOL_PREREQ)
+#MAALI_TOOL_BUILD_PREREQ="cmake/3.21.3"
+#MAALI_TOOL_CMAKE=1
+
+# for auto-building module files
+MAALI_MODULE_SET_PATH=1
+MAALI_MODULE_SET_LD_LIBRARY_PATH=1
+MAALI_MODULE_SET_MANPATH=1
+
+##############################################################################
+
+function maali_unpack {
+  maali_run "mkdir -p $MAALI_TOOL_BUILD_DIR"
+  maali_run "tar zxvf $MAALI_DST -C $MAALI_TOOL_BUILD_DIR"
+  maali_run "mv -v $MAALI_TOOL_BUILD_DIR/ghostpdl-10.03.1/* $MAALI_TOOL_BUILD_DIR"
+  maali_run "ls -l $MAALI_TOOL_BUILD_DIR"
+  maali_run "echo "the libtiffconfdir is $LIBTIFFCONFDIR"
+  maali_run "echo "the absolutesourcepath is $absolute_source_path"
+}
+
+##############################################################################
