@@ -54,6 +54,8 @@ function maali_build {
   cp $MAALI_DST $MAALI_BUILD_DIR
   cd $MAALI_BUILD_DIR
   ./""$MAALI_TOOL_NAME"_"$MAALI_TOOL_VERSION"_linux_x86-64_shared_openmpi416.run" -- -p $MAALI_INSTALL_DIR
+  cd $MAALI_INSTALL_DIR
+  mv -v ./orca_6_0_0/* "$MAALI_INSTALL_DIR"
   }
 
 ##############################################################################
