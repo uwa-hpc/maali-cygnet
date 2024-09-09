@@ -3,7 +3,7 @@
 ##############################################################################
 
 # specify which compilers we want to build the tool with
-MAALI_TOOL_COMPILERS="binary"
+MAALI_TOOL_COMPILERS="gcc/12.4.0 openmpi/4.1.6"
 #Eventhough the build does not use any of the three compilers it will set all the required environment variables in all
 #the Programing Environments. 
 
@@ -19,7 +19,7 @@ MAALI_TOOL_BUILD_DIR="$MAALI_BUILD_DIR/$MAALI_TOOL_NAME-$MAALI_TOOL_VERSION"
 MAALI_TOOL_TYPE="apps"
 
 # tool pre-requisites 
-MAALI_TOOL_PREREQ="gcc/12.4.0 openmpi/4.1.6"
+MAALI_TOOL_PREREQ=""
 
 ## These are boolean options set to 1 to add to module
 MAALI_MODULE_SET_ORCA_LIB='$MAALI_INSTALL_DIR'
