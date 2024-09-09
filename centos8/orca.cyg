@@ -3,7 +3,7 @@
 ##############################################################################
 
 # specify which compilers we want to build the tool with
-MAALI_TOOL_COMPILERS="${MAALI_DEFAULT_SYSTEM_GCC} ${MAALI_DEFAULT_MPI}"
+MAALI_TOOL_COMPILERS="${MAALI_DEFAULT_COMPILERS}"
 #Eventhough the build does not use any of the two compilers it will set all the required environment variables in all
 #the Programing Environments. 
 
