@@ -3,8 +3,8 @@
 ##############################################################################
 
 # specify which compilers we want to build the tool with
-MAALI_TOOL_COMPILERS="gcc/12.4.0 openmpi/4.1.6"
-#Eventhough the build does not use any of the three compilers it will set all the required environment variables in all
+MAALI_TOOL_COMPILERS="${MAALI_DEFAULT_SYSTEM_GCC} ${MAALI_DEFAULT_MPI}"
+#Eventhough the build does not use any of the two compilers it will set all the required environment variables in all
 #the Programing Environments. 
 
 # URL to download the source code from
