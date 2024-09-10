@@ -1,0 +1,59 @@
+##############################################################################
+# maali config file for subread
+##############################################################################
+
+# Description of what the package/tool is.
+read -r -d '' MAALI_MODULE_WHATIS << EOF
+The Subread package comprises a suite of software programs for processing next-gen sequencing read data including:
+
+Subread: a general-purpose read aligner which can align both genomic DNA-seq and RNA-seq reads. It can also be used to discover genomic mutations including short indels and structural variants.
+Subjunc: a read aligner developed for aligning RNA-seq reads and for the detection of exon-exon junctions. Gene fusion events can be detected as well.
+featureCounts: a software program developed for counting reads to genomic features such as genes, exons, promoters and genomic bins.
+Sublong: a long-read aligner that is designed based on seed-and-vote.
+exactSNP: a SNP caller that discovers SNPs by testing signals against local background noises.
+
+For more information see https://subread.sourceforge.net/
+
+EOF
+
+# specify which compilers we want to build the tool with
+MAALI_TOOL_COMPILERS="gcc/12.4.0"
+
+# URL to download the source code from
+MAALI_URL="https://sourceforge.net/projects/subread/files/subread-2.0.6/"
+# location we are downloading the source code to
+MAALI_DST="$MAALI_SRC/"$MAALI_TOOL_NAME"-"$MAALI_TOOL_VERSION"-source.tar.gz"
+
+# where the unpacked source code is located
+MAALI_TOOL_BUILD_DIR="$MAALI_BUILD_DIR/$MAALI_TOOL_NAME-$MAALI_TOOL_VERSION-source"
+
+# type of tool (eg. apps, devel, python, etc.)
+MAALI_TOOL_TYPE="apps"
+
+# tool pre-requisites 
+MAALI_TOOL_PREREQ=""
+
+# for auto-building module files
+MAALI_MODULE_SET_PATH=1
+MAALI_MODULE_SET_SUBREAD_HOME="$MAALI_INSTALL_DIR"
+
+##############################################################################
+
+function maali_download {
+  log ".. supressing downloading as we are using a predownloaded .tar.gz file"
+}
+
+##############################################################################
+
+function maali_build {
+  maali_makedir "$MAALI_TOOL_BUILD_DIR"
+  maali_makedir "$MAALI_INSTALL_DIR"
+  
+  cd $MAALI_SRC
+  tar zxvf subread-2.0.6-source.tar.gz -C $MAALI_BUILD_DIR
+  cd $MAALI_TOOL_BUILD_DIR/src
+  make -f Makefile.Linux
+  cp -r $MAALI_TOOL_BUILD_DIR/bin $MAALI_INSTALL_DIR
+  }
+  
+##############################################################################
