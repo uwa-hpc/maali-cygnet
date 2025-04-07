@@ -1,0 +1,67 @@
+##############################################################################
+# maali cygnet file for libgff
+##############################################################################
+
+read -r -d '' MAALI_MODULE_WHATIS << EOF
+This is an attempt to perform a simple libraryfication of the GFF/GTF
+parsing code that is used in GFFRead codebase. There are not many (any?) 
+relatively lightweight GTF/GFF parsers exposing a C++ interface, and the 
+goal of this library is to provide this functionality without the necessity 
+of drawing in a heavy-weight dependency like SeqAn. 
+Note: This library draws directly from the code in GFFRead and GCLib, 
+    and exists primarily to remove functionality (and hence code) that 
+    is unnecessary for our downstream purposes. In the future, it may 
+    be appropriate to just replace this library wholesale with GCLib.
+
+For further information see:
+https://github.com/COMBINE-lab/libgff
+
+EOF
+
+# specify which compilers we want to build the tool with
+MAALI_TOOL_COMPILERS="$MAALI_DEFAULT_GCC_COMPILERS"
+
+# URL to download the source code from
+MAALI_URL="https://github.com/COMBINE-lab/${MAALI_TOOL_NAME}/archive/refs/tags/v${MAALI_TOOL_VERSION}.tar.gz"
+
+# location we are downloading the source code to
+MAALI_DST="$MAALI_SRC/$MAALI_TOOL_NAME-${MAALI_TOOL_VERSION}.tar.gz"
+
+# where the unpacked source code is located
+MAALI_TOOL_BUILD_DIR="$MAALI_BUILD_DIR/${MAALI_TOOL_NAME}-${MAALI_TOOL_VERSION}"
+
+# type of tool (eg. apps, devel, python, etc.)
+MAALI_TOOL_TYPE="bio-apps"
+
+# tool pre-requisites modules needed to install this new tool/package
+MAALI_TOOL_PREREQ=""
+
+# tool build pre-requisites - not added to the module, only needed for building (loaded after MAALI_TOOL_PREREQ)
+MAALI_TOOL_BUILD_PREREQ=""
+
+# add additional configure options
+#MAALI_TOOL_CONFIGURE='-DCMAKE_BUILD_TYPE:STRING=Release '
+#MAALI_TOOL_CONFIGURE='-DCMAKE_INSTALL_PREFIX:PATH=/uwahpc/rocky8/bio-apps/gcc/11.5.0/libgff/2.0.0'
+
+# for auto-building module files
+MAALI_MODULE_SET_PATH=1
+MAALI_MODULE_SET_PKG_CONFIG_PATH=1
+MAALI_MODULE_SET_LD_LIBRARY_PATH=1
+
+
+##############################################################################
+
+function maali_build {
+
+echo "the install dir is $MAALI_INSTALL_DIR"
+cd "$MAALI_INSTALL_DIR"
+
+maali_run "cmake $MAALI_TOOL_BUILD_DIR"
+maali_run "echo "the build dir is $MAALI_TOOL_BUILD_DIR""
+maali_run "make"
+maali_run "make install DESTDIR=/uwahpc/rocky8/bio-apps/gcc/11.5.0/libgff/2.0.0"
+
+}
+
+##############################################################################
+
