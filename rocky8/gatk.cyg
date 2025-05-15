@@ -1,0 +1,76 @@
+##############################################################################
+# maali config file for GenomeAnalysisTK
+##############################################################################
+read -r -d '' MAALI_MODULE_WHATIS << EOF
+The GATK is the industry standard for identifying SNPs and indels in 
+germline DNA and RNAseq data. Its scope is now expanding to include 
+somatic short variant calling, and to tackle copy number (CNV) and 
+structural variation (SV). In addition to the variant callers 
+themselves, the GATK also includes many utilities to perform related 
+tasks such as processing and quality control of high-throughput 
+sequencing data, and bundles the popular Picard toolkit.
+
+For more information see https://gatk.broadinstitute.org/hc/en-us
+
+You will need to load a Python or conda environment with Python 2.6 
+or greater to run the GATK wrapper script. A Conda environment prepared 
+by Broad Institute with some other required packages can be found here
+
+https://github.com/broadinstitute/gatk/blob/master/scripts/gatkcondaenv.yml.template 
+
+EOF
+# specify which compilers we want to build the tool with
+MAALI_TOOL_COMPILERS="binary"
+
+# URL to download the source code from
+MAALI_URL="https://github.com/broadinstitute/gatk"
+# location we are downloading the source code to
+MAALI_DST="$MAALI_SRC/$MAALI_TOOL_NAME-$MAALI_TOOL_VERSION.zip"
+
+# where the unpacked source code is located
+MAALI_TOOL_BUILD_DIR="$MAALI_BUILD_DIR/$MAALI_TOOL_NAME-$MAALI_TOOL_VERSION"
+
+# type of tool (eg. apps, devel, python, etc.)
+MAALI_TOOL_TYPE="bio-apps"
+
+# tool pre-requisites
+MAALI_TOOL_PREREQ="r/4.4.1 openjdk/17.0.2"
+
+# for auto-building module files
+MAALI_MODULE_SET_PATH=1
+MAALI_MODULE_SET_GATK_LOCAL_JAR=${MAALI_APP_HOME}
+MAALI_MODULE_SET_GATK_SPARK_JAR=${MAALI_APP_HOME}
+
+##############################################################################
+
+function maali_download {
+  log ".. supressing downloading as we are using a git repository"
+}
+
+##############################################################################
+
+function maali_unpack {
+  log " .. supressing unpacking as we are using a git repository"
+}
+
+##############################################################################
+
+function maali_pre_build {
+  log " .. supressing unpacking as we are using a git repository"
+}
+
+##############################################################################
+
+function maali_build {
+  maali_makedir "$MAALI_TOOL_BUILD_DIR"
+  maali_makedir "$MAALI_INSTALL_DIR"
+  
+  git clone $MAALI_URL $MAALI_INSTALL_DIR
+  cd $MAALI_INSTALL_DIR
+  cd gatk
+  module list
+  pwd
+  ./gradlew
+}
+
+##############################################################################
