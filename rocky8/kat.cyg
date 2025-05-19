@@ -1,0 +1,56 @@
+##############################################################################
+# maali config file for KAT - KMER analysis Toolkit
+##############################################################################
+read -r -d '' MAALI_MODULE_WHATIS << EOF
+ KAT is a suite of tools that analyse jellyfish hashes or sequence 
+ files (fasta or fastq) using kmer counts. 
+
+ For further information see: https://www.earlham.ac.uk/kat-tools
+
+EOF
+# specify which compilers we want to build the tool with
+MAALI_TOOL_COMPILERS="$MAALI_DEFAULT_GCC_COMPILERS"
+
+# URL to download the source code from
+MAALI_URL="https://github.com/TGAC/KAT/archive/refs/tags/Release-${MAALI_TOOL_VERSION}.tar.gz"
+
+# location we are downloading the source code to
+MAALI_DST="$MAALI_SRC/Release-$MAALI_TOOL_VERSION.tar.gz"
+
+# where the unpacked source code is located
+MAALI_TOOL_BUILD_DIR="$MAALI_BUILD_DIR/KAT-Release-${MAALI_TOOL_VERSION}"
+
+# type of tool (eg. apps, devel, python, etc.)
+MAALI_TOOL_TYPE="bio-apps"
+
+# tool pre-requisites
+MAALI_TOOL_PREREQ="python/3.9.22 boost/1.88.0"
+
+# add additional configure options
+MAALI_TOOL_CONFIGURE=' '
+
+# for auto-building module files
+## these are boolean options ste to 1 to add to module
+MAALI_MODULE_SET_PATH=1
+MAALI_MODULE_SET_MANPATH=1
+MAALI_MODULE_SET_LD_LIBRARY_PATH=1
+
+##############################################################################
+
+function maali_build {
+    #maali_run "conda activate /uwahpc/centos8/python/anaconda3/2021.05/envs/bio/lib/python3.9/venv/scripts/common"
+    cd "$MAALI_TOOL_BUILD_DIR"
+    MAALI_TOOL_CONFIGURE_EVAL=`eval echo "$MAALI_TOOL_CONFIGURE"`
+    maali_run "./build_boost.sh"
+    maali_run "./autogen.sh"
+
+    maali_run "./configure --prefix=$MAALI_INSTALL_DIR $MAALI_TOOL_CONFIGURE_EVAL"
+    maali_run "pwd"
+    maali_run "make clean"
+    maali_run "make -j$MAALI_CORES"
+    maali_run "pwd"
+    maali_run "make install"
+
+}
+
+##############################################################################
