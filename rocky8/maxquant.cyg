@@ -1,0 +1,71 @@
+##############################################################################
+# MAALI config file for MaxQuant
+##############################################################################
+# THIS IS STILL A WORK IN PROGRESS. NOTES FOR LATER E BARKER 27/02/2025
+
+#wget https://dot.net/v1/dotnet-install.sh -O dotnet-install.sh
+#chmod +x dotnet-install.sh
+#./dotnet-install.sh --version 8.0.302  --install-dir $DOTNET_PATH/dotnet8/
+#PATH=${DOTNET_PATH}/dotnet8:$PATH >> ~/.bashrc
+#dotnet ./bin/MaxQuantCmd.dll --help
+
+
+read -r -d ''MAALI_MODULE_WHATIS << EOF
+
+"MaxQuant is a proteomics software package designed for analyzing large mass-spectrometric data sets. It is specifically aimed at high-resolution MS data. For more information see https://cox-labs.github.io/coxdocs/maxquant_instructions.html"
+
+EOF
+
+# specify which compilers we want to build the tool with
+MAALI_TOOL_COMPILERS="binary"
+
+# URL to download the source code from
+#MAALI_URL="https://maxquant.org/download_asset/maxquant/latest"
+
+# location we are downloading the source code to
+MAALI_DST="$MAALI_SRC/"$MAALI_TOOL_NAME"_v$MAALI_TOOL_VERSION.zip"
+
+# where the unpacked source code is located
+MAALI_TOOL_BUILD_DIR="$MAALI_BUILD_DIR/"$MAALI_TOOL_NAME"_v$MAALI_TOOL_VERSION"
+
+# type of tool (eg. apps, devel, python, etc.)
+MAALI_TOOL_TYPE="bio-apps"
+
+# tool pre-requisites
+MAALI_TOOL_PREREQ=""
+
+# for auto-building module files
+MAALI_MODULE_SET_PATH=1
+
+##############################################################################
+function maali_build {
+  maali_run "cd $MAALI_SRC"
+  maali_run "mkdir -p $MAALI_INSTALL_DIR"
+  maali_run "unzip "$MAALI_SRC/$MAALI_TOOL_NAME"_v"$MAALI_TOOL_VERSION" -d $MAALI_INSTALL_DIR"
+#  maali_run "chmod 755 $MAALI_INSTALL_DIR"
+}
+
+##############################################################################
+
+#function MAALI_module {
+
+#cat <<EOF >$MAALI_TOOL_MODULE
+#%Module######################################################################
+
+# $MAALI_TOOL modulefile
+
+#proc ModulesHelp { } {
+#  puts stderr "Sets up the paths you need to use $MAALI_TOOL version $version"
+#}
+#set sys     [uname sysname]
+#set version $MAALI_TOOL_VERSION
+#set tool    $MAALI_TOOL_NAME
+#if { [is-loaded \$tool] && ! [is-loaded \$tool/\$version] } {
+#  module unload \$tool
+#}
+
+#prepend-path PATH $MAALI_INSTALL_DIR
+#EOF
+#}
+
+##############################################################################
