@@ -1,0 +1,86 @@
+##############################################################################
+# maali cygnet file for GCC
+##############################################################################
+
+read -r -d '' MAALI_MODULE_WHATIS << EOF
+
+The GNU Compiler Collection includes front ends for C, C++, Objective-C,
+Fortran, Ada, and Go, as well as libraries for these languages (libstdc++,...).
+GCC was originally written as the compiler for the GNU operating system. The
+GNU system was developed to be 100% free software, free in the sense that it
+respects the user's freedom.
+
+For further information see https://gcc.gnu.org/
+
+EOF
+
+# specify which compilers we want to build the tool with
+MAALI_TOOL_COMPILERS="gcc/11.5.0"
+
+# URL to download the source code from
+MAALI_URL="http://mirror.aarnet.edu.au/pub/gnu/gcc/${MAALI_TOOL_NAME}-${MAALI_TOOL_VERSION}/${MAALI_TOOL_NAME}-${MAALI_TOOL_VERSION}.tar.xz"
+
+# location we are downloading the source code to
+MAALI_DST="$MAALI_SRC/$MAALI_TOOL_NAME-$MAALI_TOOL_VERSION.tar.xz"
+
+# where the unpacked source code is located
+MAALI_TOOL_BUILD_DIR="$MAALI_BUILD_DIR/$MAALI_TOOL_NAME-$MAALI_TOOL_VERSION"
+
+# for gcc module want to leave out the build compiler/compiler version from path
+MAALI_SYSTEM_CYGNET_FILE=1
+MAALI_INSTALL_DIR=${MAALI_ROOT}/devel/compiler/${MAALI_TOOL_NAME}/${MAALI_TOOL_VERSION}
+
+# type of tool (eg. apps, devel, python, etc.)
+MAALI_TOOL_TYPE="devel"
+
+# add additional configure options  -- go ??
+MAALI_TOOL_CONFIGURE="--enable-languages=c,c++,fortran "  
+MAALI_TOOL_CONFIGURE+="--enable-shared --enable-threads=posix "
+#  enable-checking is very expensive time wise 
+#MAALI_TOOL_CONFIGURE+="--enable-checking=release "
+MAALI_TOOL_CONFIGURE+="--with-target-system-zlib=auto "
+MAALI_TOOL_CONFIGURE+="--with-local-prefix=/uwahpc/centos/devel/compiler/${MAALI_TOOL_NAME}/${MAALI_TOOL_VERSION} "
+#MAALI_TOOL_CONFIGURE+="--enable-__cxa_atexit "  
+#MAALI_TOOL_CONFIGURE+="--disable-libunwind-exceptions "
+#MAALI_TOOL_CONFIGURE+="--enable-gnu-unique-object --enable-linker-build-id "
+#MAALI_TOOL_CONFIGURE+="--with-gcc-major-version-only --with-linker-hash-style=gnu "
+#MAALI_TOOL_CONFIGURE+="--enable-plugin "
+#MAALI_TOOL_CONFIGURE+="--enable-initfini-array "
+#MAALI_TOOL_CONFIGURE+="--enable-cet "
+#MAALI_TOOL_CONFIGURE+="--with-cpu-64=x86-64 "
+#MAALI_TOOL_CONFIGURE+="--with-tune-64=x86-64 "
+# disable-multilib - build only 64bit version
+MAALI_TOOL_CONFIGURE+="--disable-multilib "
+MAALI_TOOL_CONFIGURE+="--enable-cxa_atexit "
+MAALI_TOOL_CONFIGURE+="--without-isl "
+## --without-isl will download and install gmpm mpfr and mpc 
+#MAALI_TOOL_CONFIGURE+="--with-gmp --with-mpfr --with-mpc "
+
+# for auto-building module files
+MAALI_MODULE_SET_PATH=1
+MAALI_MODULE_SET_LD_LIBRARY_PATH='lib64'
+MAALI_MODULE_SET_MANPATH=1
+MAALI_MODULE_SET_COMPILER='gcc'
+MAALI_MODULE_SET_COMPILER_VER='$MAALI_TOOL_VERSION'
+MAALI_MODULE_SET_CC='gcc'
+MAALI_MODULE_SET_CXX='g++'
+MAALI_MODULE_SET_FC='gfortran'
+MAALI_MODULE_SET_F77='gfortran'
+MAALI_MODULE_SET_F90='gfortran'
+MAALI_MODULE_SET_F95='gfortran'
+MAALI_MODULE_SET_F9X='gfortran'
+
+##############################################################################
+
+function maali_build {
+  cd "$MAALI_TOOL_BUILD_DIR"
+  MAALI_TOOL_CONFIGURE_EVAL=`eval echo "$MAALI_TOOL_CONFIGURE"`
+  maali_run "./contrib/download_prerequisites --no-isl"
+
+  maali_run "${MAALI_TOOL_BUILD_DIR}/configure --prefix=${MAALI_INSTALL_DIR} $MAALI_TOOL_CONFIGURE_EVAL"
+
+  maali_run "make -j 16 "
+  maali_run "make install"
+}
+
+##############################################################################
