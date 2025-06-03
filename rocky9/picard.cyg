@@ -1,0 +1,63 @@
+##############################################################################
+# maali config file for Picard
+##############################################################################
+
+# specify which compilers we want to build the tool with
+MAALI_TOOL_COMPILERS="binary"
+#Eventhough the build does not use any of the three compilers it will set all the required environment variables in all
+#the Programing Environments. 
+
+# URL to download the source code from
+MAALI_URL="https://github.com/broadinstitute/picard.git"
+# location we are downloading the source code to
+MAALI_DST="$MAALI_SRC/$MAALI_TOOL_NAME-$MAALI_TOOL_VERSION.tar.gz"
+
+# where the unpacked source code is located
+MAALI_TOOL_BUILD_DIR="$MAALI_BUILD_DIR/$MAALI_TOOL_NAME-$MAALI_TOOL_VERSION"
+
+# type of tool (eg. apps, devel, python, etc.)
+MAALI_TOOL_TYPE="bio-apps"
+
+# tool pre-requisites 
+MAALI_TOOL_PREREQ="openjdk/17.0.2"
+
+## These are boolean options set to 1 to add to module
+MAALI_MODULE_SET_PICARD_LIB='$MAALI_INSTALL_DIR/build/libs/picard.jar'
+#MAALI_MODULE_SET_SETENV='PICARD_LIB=$MAALI_INSTALL_DIR/build/libs/picard.jar'
+# Description of what the package/tool is.
+MAALI_MODULE_WHATIS="A set of tools (in Java) for working with next generation sequencing data in the BAM (http://samtools.sourcef
+orge.net) format."
+
+##############################################################################
+
+function maali_download {
+  log ".. supressing downloading as we are using a git repository"
+}
+
+##############################################################################
+
+function maali_unpack {
+  log " .. supressing unpacking as we are using a git repository"
+}
+
+##############################################################################
+
+function maali_pre_build {
+  log " .. supressing unpacking as we are using a git repository"
+}
+
+##############################################################################
+
+function maali_build {
+  maali_makedir "$MAALI_TOOL_BUILD_DIR"
+  maali_makedir "$MAALI_INSTALL_DIR"
+  
+  git clone $MAALI_URL $MAALI_INSTALL_DIR
+  cd $MAALI_INSTALL_DIR
+  module list
+  pwd
+  ./gradlew shadowJar
+  java -jar build/libs/picard.jar
+}
+
+##############################################################################
