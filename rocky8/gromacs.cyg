@@ -1,0 +1,130 @@
+##############################################################################
+# maali cygnet file for gromacs
+##############################################################################
+
+read -r -d '' MAALI_MODULE_WHATIS << EOF
+
+GROMACS is a versatile package to perform molecular dynamics, i.e. simulate the
+Newtonian equations of motion for systems with hundreds to millions of
+particles.
+
+It is primarily designed for biochemical molecules like proteins, lipids and
+nucleic acids that have a lot of complicated bonded interactions, but since
+GROMACS is extremely fast at calculating the nonbonded interactions (that
+usually dominate simulations) many groups are also using it for research on
+non-biological systems, e.g. polymers.
+
+For further information see http://www.gromacs.org/
+
+EOF
+
+# specify which compilers we want to build the tool with
+MAALI_TOOL_COMPILERS="$MAALI_DEFAULT_GCC_COMPILERS"
+
+# URL to download the source code from
+MAALI_URL="ftp://ftp.gromacs.org/pub/gromacs/$MAALI_TOOL_NAME-$MAALI_TOOL_VERSION.tar.gz"
+
+# location we are downloading the source code to
+MAALI_DST="$MAALI_SRC/$MAALI_TOOL_NAME-$MAALI_TOOL_VERSION.tar.gz"
+
+# where the unpacked source code is located
+MAALI_TOOL_BUILD_DIR="$MAALI_BUILD_DIR/$MAALI_TOOL_NAME-$MAALI_TOOL_VERSION"
+
+# type of tool (eg. apps, devel, python, etc.)
+MAALI_TOOL_TYPE="apps"
+
+MAALI_TOOL_PREREQ="openmpi/4.1.6 fftw/3.3.10 boost/1.88.0 lapack/3.12.1"
+
+# add additional configure options
+MAALI_TOOL_CONFIGURE=' -DGMX_GPU=OFF -DGMX_SIMD=AVX_256 -DBUILD_SHARED_LIBS=on '
+MAALI_TOOL_CONFIGURE+='-DGMX_FFT_LIBRARY=fftw3 -DFFTWF_INCLUDE_DIR=$FFTW_INCLUDE '
+MAALI_TOOL_CONFIGURE+='-DCMAKE_PREFIX_PATH=$MAALI_FFTW_HOME -DFFTW3_LIBRARIES=$FFTW_LIB '
+MAALI_TOOL_CONFIGURE+='-DFFTW3F_LIBRARIES=$FFTW_LIB -DFFTW3F_INCLUDE_DIR=$FFTW_INCLUDE '
+MAALI_TOOL_CONFIUGRE+='-DFFTW3_INCLUDE_DIR=$FFTW_INCLUDE  -DGMX_BUILD_UNITTESTS=OFF '
+MAALI_TOOL_CONFIGURE+='-DGMX_USE_RDTSCP=OFF '
+
+# tool build pre-requisites - not added to the module, only needed for building (loaded after MAALI_TOOL_PREREQ)
+MAALI_TOOL_BUILD_PREREQ="cmake/3.31.6"
+
+# for auto-building module files
+MAALI_MODULE_SET_PATH=1
+MAALI_MODULE_SET_MANPATH=1
+MAALI_MODULE_SET_GMXLIB='$MAALI_APP_HOME/share/gromacs/top'
+MAALI_MODULE_SET_GMXBIN='$MAALI_APP_HOME/bin'
+MAALI_MODULE_SET_GMXDATA='$MAALI_APP_HOME/share'
+MAALI_MODULE_SET_GMXMAN='$MAALI_APP_HOME/share/man'
+
+MAALI_MODULE_WHATIS='GROMACS is a versatile package to perform molecular dynamics, '
+MAALI_MODULE_WHATIS+='i.e. simulate the Newtonian equations of motion for systems '
+MAALI_MODULE_WHATIS+='with hundreds to millions of particles.'
+
+LIB=lib64
+MAALI_MODULE_SET_GMXLDLIB='$MAALI_APP_HOME/"$LIB"'
+MAALI_MODULE_SET_LD_LIBRARY_PATH="$LIB"
+
+##############################################################################
+function maali_cmake_build {
+  # for tools that use cmake
+
+  # allows late evaluation
+  MAALI_TOOL_CONFIGURE_EVAL=`eval echo "$MAALI_TOOL_CONFIGURE"`
+  echo "tool major version is $MAALI_TOOL_MAJOR_VERSION "
+#  MAALI_TOOL_MAJOR_VERSION=`echo "$MAALI_TOOL_VERSION" | cut -d . -f 1`
+
+
+  # Only use AVX2_256 hardware acceleration when appropriate
+  if [ ${CRAY_CPU_TARGET} == "haswell" ] && [ $MAALI_TOOL_MAJOR_VERSION -ge 5 ]; then
+    MAALI_TOOL_CONFIGURE_SIMD="$MAALI_TOOL_CONFIGURE -DGMX_SIMD=AVX2_256"
+  else
+    MAALI_TOOL_CONFIGURE_SIMD="$MAALI_TOOL_CONFIGURE"
+  fi
+
+    # cpu build of gromacs
+    if [ $MAALI_CUDA_BUILD -eq 0 ]; then
+
+  	# cmake likes to build in a directory of it's own.  single-precision, with MPI
+  	maali_makedir "$MAALI_TOOL_BUILD_DIR/$MAALI_TOOL_NAME-build"
+  	cd "$MAALI_TOOL_BUILD_DIR/$MAALI_TOOL_NAME-build"
+
+#  	maali_run "cmake -DGMX_BUILD_MDRUN_ONLY=ON -DGMX_MPI=ON -DCMAKE_INSTALL_PREFIX=$MAALI_INSTALL_DIR $MAALI_TOOL_CONFIGURE $MAALI_CMAKE_PATH"
+#  	if [ $DEBUG ]; then
+#  	  maali_run "make -j $MAALI_CORES VERBOSE=TRUE"
+#  	else
+#  	  maali_run "make -j $MAALI_CORES "
+#  	fi
+#  	maali_run "make install"
+
+  	# cmake likes to build in a directory of it's own. double-precision,with MPI
+  	maali_makedir "$MAALI_TOOL_BUILD_DIR/$MAALI_TOOL_NAME-double"
+  	cd "$MAALI_TOOL_BUILD_DIR/$MAALI_TOOL_NAME-double"
+
+  	maali_run "cmake -DGMX_BUILD_MDRUN_ONLY=ON -DGMX_MPI=ON -DGMX_DOUBLE=ON -DCMAKE_INSTALL_PREFIX=$MAALI_INSTALL_DIR $MAALI_TOOL_CONFIGURE $MAALI_CMAKE_PATH"
+  	if [ $DEBUG ]; then
+  	  maali_run "make  -j $MAALI_CORES  VERBOSE=TRUE"
+  	else
+  	  maali_run "make  -j $MAALI_CORES "
+  	fi
+  	maali_run "make install"
+	
+
+    # gpu build of gromacs when maali is invoked with -n 
+    else
+
+        # cmake likes to build in a directory of it's own. CUDA, single-precision
+        maali_makedir "$MAALI_TOOL_BUILD_DIR/$MAALI_TOOL_NAME-cuda"
+        cd "$MAALI_TOOL_BUILD_DIR/$MAALI_TOOL_NAME-cuda"
+
+        maali_run "cmake -DCMAKE_INSTALL_PREFIX=$MAALI_INSTALL_DIR $MAALI_TOOL_CONFIGURE -DGMX_GPU=ON -DGMX_DEFAULT_SUFFIX=OFF -DGMX_BINARY_SUFFIX=\"_cuda\" -DGMX_LIBS_SUFFI
+X=\"_cuda\" $MAALI_CMAKE_PATH"
+        if [ $DEBUG ]; then
+          maali_run "make mdrun -j $MAALI_CORES  VERBOSE=TRUE"
+        else
+          maali_run "make mdrun -j $MAALI_CORES "
+        fi
+        maali_run "make install-mdrun"
+
+    fi
+	
+}
+
+##############################################################################
