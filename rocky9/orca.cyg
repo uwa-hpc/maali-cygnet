@@ -1,0 +1,61 @@
+##############################################################################
+# maali config file for ORCA
+#############################################################################
+
+# specify which compilers we want to build the tool with
+MAALI_TOOL_COMPILERS="$MAALI_DEFAULT_GCC_COMPILERS"
+#Eventhough the build does not use any of the two compilers it will set all the required environment variables in all
+#the Programing Environments. 
+
+# URL to download the source code from
+MAALI_URL="https://orcaforum.kofo.mpg.de/app.php/portal"
+# location we are downloading the source code to
+MAALI_DST="$MAALI_SRC/"$MAALI_TOOL_NAME"_"$MAALI_TOOL_VERSION"_linux_x86-64_shared_openmpi416.run"
+
+# where the unpacked source code is located
+MAALI_TOOL_BUILD_DIR="$MAALI_BUILD_DIR/$MAALI_TOOL_NAME-$MAALI_TOOL_VERSION"
+
+# type of tool (eg. apps, devel, python, etc.)
+MAALI_TOOL_TYPE="apps"
+
+# tool pre-requisites 
+MAALI_TOOL_PREREQ="$MAALI_DEFAULT_MPI"
+
+## These are boolean options set to 1 to add to module
+MAALI_MODULE_SET_ORCA_LIB='$MAALI_INSTALL_DIR'
+# Description of what the package/tool is.
+MAALI_MODULE_WHATIS="ORCA is a general-purpose quantum chemistry package featuring a variety of methods including semi-empirical, density functional theory, many-body perturbation, coupled cluster, and multireference methods. ORCA provides an easy-to-learn input structure and thus high accessibility of quantum chemical approaches and workflows. The ORCA program package is mainly developed by Frank Neese, the department of molecular theory and spectroscopy at the Max-Planck-Institut für Kohlenforschung (MPI KoFo), and the FACCTs GmbH which also manages commercial licensing to industry. ORCA is generally freely available for academic use. For more information see https://www.faccts.de/docs/orca/6.0/manual/"
+
+##############################################################################
+
+function maali_download {
+  log ".. supressing downloading as we are using a predownloaded .run file"
+}
+
+##############################################################################
+
+function maali_unpack {
+  log " .. supressing unpacking as we are using a predownloaded .run file"
+}
+
+##############################################################################
+
+function maali_pre_build {
+  log " .. supressing unpacking as we are using a predownloaded .run file"
+}
+
+##############################################################################
+
+function maali_build {
+  maali_makedir "$MAALI_TOOL_BUILD_DIR"
+  maali_makedir "$MAALI_INSTALL_DIR"
+  
+  cd $MAALI_SRC
+  cp $MAALI_DST $MAALI_BUILD_DIR
+  cd $MAALI_BUILD_DIR
+  ./""$MAALI_TOOL_NAME"_"$MAALI_TOOL_VERSION"_linux_x86-64_shared_openmpi416.run" -- -p $MAALI_INSTALL_DIR
+  cd $MAALI_INSTALL_DIR
+  mv -v ./orca_6_0_0/* "$MAALI_INSTALL_DIR"
+  }
+
+##############################################################################

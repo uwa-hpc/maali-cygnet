@@ -1,0 +1,52 @@
+##############################################################################
+# maali config file for metis
+##############################################################################
+read -r -d '' MAALI_MODULE_WHATIS << EOF
+
+METIS is a set of serial programs for partitioning graphs, partitioning 
+finite element meshes, and producing fill reducing orderings for sparse 
+matrices. The algorithms implemented in METIS are based on the multilevel 
+recursive-bisection, multilevel k-way, and multi-constraint partitioning 
+schemes developed in our lab.
+ 
+For further information see: 
+ http://glaros.dtc.umn.edu/gkhome/views/metis
+
+EOF
+
+# specify which compilers we want to build the tool with
+MAALI_TOOL_COMPILERS="$MAALI_DEFAULT_GCC_COMPILERS"
+
+# URL to download the source code from
+MAALI_URL="http://glaros.dtc.umn.edu/gkhome/fetch/sw/metis/$MAALI_TOOL_NAME-$MAALI_TOOL_VERSION.tar.gz"
+
+# location we are downloading the source code to
+MAALI_DST="$MAALI_SRC/$MAALI_TOOL_NAME-$MAALI_TOOL_VERSION.tar.gz"
+
+# where the unpacked source code is located
+MAALI_TOOL_BUILD_DIR="$MAALI_BUILD_DIR/$MAALI_TOOL_NAME-$MAALI_TOOL_VERSION"
+
+# type of tool (eg. apps, devel, python, etc.)
+MAALI_TOOL_TYPE="apps"
+
+# tool build pre-requisites - not added to the module, only needed for building (loaded after MAALI_TOOL_PREREQ)
+MAALI_TOOL_PREREQ=""
+
+
+# for auto-building module file 
+MAALI_MODULE_SET_LD_LIBRARY_PATH=1
+MAALI_MODULE_SET_PATH=1
+
+##############################################################################
+
+function maali_build {
+  
+  cd "$MAALI_TOOL_BUILD_DIR"
+
+#  CC="/uwahpc/devel/intel/oneapi-2023.0.0/compiler/2023.0.0/linux/bin/icx"
+  maali_run "make config shared=1 openmp=1 prefix=$MAALI_INSTALL_DIR cc=$CC"
+  maali_run "make install"
+
+}
+
+##############################################################################

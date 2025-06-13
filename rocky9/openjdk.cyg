@@ -1,0 +1,51 @@
+##############################################################################
+# maali config file for Java
+##############################################################################
+
+read -r -d ''MAALI_MODULE_WHATIS << EOF
+
+"OpenJDK is a free and open-source implementation of the Java Platform. For more information see https://openjdk.org/"
+
+EOF
+
+# specify which compilers we want to build the tool with
+MAALI_TOOL_COMPILERS="binary"
+
+# URL to download the source code from (go to jdk.java.net/archive for links)
+MAALI_URL="https://download.java.net/java/GA/jdk18.0.2/f6ad4b4450fd4d298113270ec84f30ee/9/GPL/openjdk-18.0.2_linux-x64_bin.tar.gz"
+
+# location we are downloading the source code to
+MAALI_DST="$MAALI_SRC/"$MAALI_TOOL_NAME"-"$MAALI_TOOL_VERSION"_linux-x64.tar.gz"
+
+# where the unpacked source code is located
+MAALI_TOOL_BUILD_DIR="$MAALI_BUILD_DIR/$MAALI_TOOL_NAME/$MAALI_TOOL_VERSION"
+
+# type of tool (eg. apps, devel, python, etc.)
+MAALI_TOOL_TYPE="devel"
+
+# tool pre-requisites
+MAALI_TOOL_PREREQ=""
+
+# for auto-building module files
+MAALI_MODULE_SET_PATH=1
+MAALI_MODULE_SET_JAVA_HOME='$MAALI_APP_HOME'
+#MAALI_MODULE_SET_SETENV='JAVA_HOME=$MAALI_APP_HOME'
+
+##############################################################################
+
+function maali_unpack {
+  maali_run "mkdir -p $MAALI_TOOL_BUILD_DIR"
+  maali_run "tar -xvzf $MAALI_DST -C $MAALI_TOOL_BUILD_DIR"
+}
+
+##############################################################################
+
+function maali_build {
+  maali_run "cd $MAALI_TOOL_BUILD_DIR"
+  maali_run "mkdir -p  $MAALI_INSTALL_DIR"
+  maali_run "cd .."
+  maali_run "mv -v ./jdk-"$MAALI_TOOL_VERSION"/* $MAALI_INSTALL_DIR"
+  maali_run "rm -rf ./jdk-$MAALI_TOOL_VERSION"
+}
+
+##############################################################################
