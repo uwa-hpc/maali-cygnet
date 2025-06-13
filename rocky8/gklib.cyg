@@ -1,0 +1,49 @@
+##############################################################################
+# maali config file for GKLib
+##############################################################################
+read -r -d '' MAALI_MODULE_WHATIS << EOF
+
+A library of various helper routines and frameworks used by many of the lab's software.
+ 
+For further information see: 
+https://github.com/KarypisLab/GKlib/tree/master
+
+EOF
+
+# specify which compilers we want to build the tool with
+MAALI_TOOL_COMPILERS="$MAALI_DEFAULT_GCC_COMPILERS"
+
+# URL to download the source code from
+MAALI_URL="https://github.com/KarypisLab/GKlib.git"
+
+# location we are downloading the source code to
+MAALI_DST=""
+
+# where the unpacked source code is located
+MAALI_TOOL_BUILD_DIR="$MAALI_BUILD_DIR/$MAALI_TOOL_NAME-$MAALI_TOOL_VERSION"
+
+# type of tool (eg. apps, devel, python, etc.)
+MAALI_TOOL_TYPE="apps"
+
+# tool build pre-requisites - not added to the module, only needed for building (loaded after MAALI_TOOL_PREREQ)
+MAALI_TOOL_PREREQ="cmake/3.31.6"
+
+
+# for auto-building module file 
+MAALI_MODULE_SET_LD_LIBRARY_PATH=1
+MAALI_MODULE_SET_PATH=1
+
+##############################################################################
+
+function maali_build {
+  maali_run "mkdir $MAALI_TOOL_BUILD_DIR"  
+  cd "$MAALI_TOOL_BUILD_DIR"
+  maali_run "git clone $MAALI_URL"
+  maali_run "mv ./GKlib/* ."
+  CC="gcc"
+  maali_run "make config openmp=set prefix=$MAALI_INSTALL_DIR cc=$CC"
+  maali_run "make install"
+
+}
+
+##############################################################################
