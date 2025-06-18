@@ -35,7 +35,7 @@ MAALI_TOOL_CONFIGURE+="--enable-shared --enable-threads=posix "
 #  enable-checking is very expensive time wise 
 #MAALI_TOOL_CONFIGURE+="--enable-checking=release "
 MAALI_TOOL_CONFIGURE+="--with-target-system-zlib=auto "
-MAALI_TOOL_CONFIGURE+="--with-local-prefix=/uwahpc/centos/devel/compiler/${MAALI_TOOL_NAME}/${MAALI_TOOL_VERSION} "
+MAALI_TOOL_CONFIGURE+="--with-local-prefix=/uwahpc/${MAALI_OS}/devel/compiler/${MAALI_TOOL_NAME}/${MAALI_TOOL_VERSION} "
 #MAALI_TOOL_CONFIGURE+="--enable-__cxa_atexit "  
 #MAALI_TOOL_CONFIGURE+="--disable-libunwind-exceptions "
 #MAALI_TOOL_CONFIGURE+="--enable-gnu-unique-object --enable-linker-build-id "
@@ -72,15 +72,21 @@ function maali_build {
   cd "$MAALI_TOOL_BUILD_DIR"
   echo "----------------  $MAALI_TOOL_BUILD_DIR "
   MAALI_TOOL_CONFIGURE_EVAL=`eval echo "$MAALI_TOOL_CONFIGURE"`
+  echo "-----------------------------------"
+  echo " the OS is ${MAALI_OS} "
+  echo "-------------------------------------"
+
   maali_run "./contrib/download_prerequisites --no-isl"
 
  # mkdir -p ../build-gcc
  # cd ../build-gcc
   
-  echo "################    $MAALI_INSTALL_DIR " 
+  echo "################    $MAALI_INSTALL_DIR "
+ 
+  echo  "**** prefix /uwahpc/${MAALI_OS}/devel/compiler/${MAALI_TOOL_NAME}/${MAALI_TOOL_VERSION} " 
   
-  maali_run "${MAALI_TOOL_BUILD_DIR}/configure --prefix=/uwahpc/centos8/devel/compiler/${MAALI_TOOL_NAME}/${MAALI_TOOL_VERSION} $MAALI_TOOL_CONFIGURE_EVAL"
-  echo " current directory is `pwd` "
+  maali_run "${MAALI_TOOL_BUILD_DIR}/configure --prefix=/uwahpc/${MAALI_OS}/devel/compiler/${MAALI_TOOL_NAME}/${MAALI_TOOL_VERSION} $MAALI_TOOL_CONFIGURE_EVAL"
+  #echo " current directory is `pwd` "
 
   maali_run "make -j 8 "
   maali_run "make install"
