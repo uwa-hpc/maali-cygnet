@@ -54,10 +54,10 @@ function maali_build {
   maali_run "./configure --prefix=$MAALI_INSTALL_DIR --enable-shared --enable-unicode=ucs4"
   maali_run "make -j $MAALI_CORES"
   maali_run "make install"
-  maali_run "make clean"
-  maali_run "./configure --prefix=$MAALI_INSTALL_DIR --enable-unicode=ucs4"
-  maali_run "make -j $MAALI_CORES"
-  maali_run "make install"
+#  maali_run "make clean"
+#  maali_run "./configure --prefix=$MAALI_INSTALL_DIR --enable-unicode=ucs4"
+#  maali_run "make -j $MAALI_CORES"
+#  maali_run "make install"
 }
 
 ##############################################################################

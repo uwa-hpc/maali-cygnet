@@ -26,6 +26,10 @@ MAALI_DST="$MAALI_SRC/$MAALI_TOOL_NAME-$MAALI_TOOL_VERSION.tar.gz"
 # where the unpacked source code is located
 MAALI_TOOL_BUILD_DIR="$MAALI_BUILD_DIR/$MAALI_TOOL_NAME-$MAALI_TOOL_VERSION"
 
+# for gcc module want to leave out the build compiler/compiler version from path
+#MAALI_SYSTEM_CYGNET_FILE=1
+#MAALI_INSTALL_DIR=${MAALI_ROOT}/devel/${MAALI_TOOL_NAME}/${MAALI_TOOL_VERSION}
+
 # type of tool (eg. apps, devel, python, etc.)
 MAALI_TOOL_TYPE="devel"
 
@@ -36,9 +40,10 @@ MAALI_MODULE_SET_PATH=1
 
 function maali_build {
   # cmake uses bootstrap
-  MAALI_INSTALL_DIR="${MAALI_ROOT}/${MAALI_TOOL_TYPE}/${MAALI_TOOL_NAME}/${MAALI_TOOL_VERSION}"  
+#  echo $MAALI_ROOT/$MAALI_TOOL_TYPE/$env(COMPILER)/$env(COMPILER_VER)/$MAALI_TOOL_NAME/$MAALI_TOOL_VERSION
+#  MAALI_INSTALL_DIR=${MAALI_ROOT}/${MAALI_TOOL_TYPE}/$env(COMPILER)/$env(COMPILER_VER)/${MAALI_TOOL_NAME}/${MAALI_TOOL_VERSION}"  
   maali_run "./bootstrap --prefix=$MAALI_INSTALL_DIR"
-  maali_run "make"
+  maali_run "make -j 48"
   maali_run "make install"
 }
 
