@@ -1,0 +1,62 @@
+##############################################################################
+# maali config file for IOR
+##############################################################################
+
+# specify which compilers we want to build the tool with
+MAALI_TOOL_COMPILERS="gcc/11.5.0"
+
+# URL to download the source code from
+MAALI_URL="https://github.com/hpc/ior"
+# location we are downloading the source code to
+#MAALI_DST="$MAALI_SRC/$MAALI_TOOL_NAME-$MAALI_TOOL_VERSION.tar.gz"
+
+# where the unpacked source code is located
+MAALI_TOOL_BUILD_DIR="$MAALI_BUILD_DIR/$MAALI_TOOL_NAME-$MAALI_TOOL_VERSION"
+
+# type of tool (eg. apps, devel, python, etc.)
+MAALI_TOOL_TYPE="tools"
+
+# tool pre-requisites 
+MAALI_TOOL_PREREQ="gcc/11.5.0 openmpi/5.0.5"
+
+## These are boolean options set to 1 to add to module
+MAALI_MODULE_SET_IOR_lib='$MAALI_INSTALL_DIR/bin/ior'
+# Description of what the package/tool is.
+MAALI_MODULE_WHATIS="A parallel IO benchmark to test performance of parallel storage systems. For more information see https://ior.readthedocs.io"
+
+##############################################################################
+
+function maali_download {
+  log ".. supressing downloading as we are using a git repository"
+}
+
+##############################################################################
+
+function maali_unpack {
+  log " .. supressing unpacking as we are using a git repository"
+}
+
+##############################################################################
+
+function maali_pre_build {
+  log " .. supressing unpacking as we are using a git repository"
+}
+
+##############################################################################
+
+function maali_build {
+  maali_run "export PATH=/usr/bin/autoreconf27:$PATH"
+  maali_makedir "$MAALI_TOOL_BUILD_DIR"
+  maali_makedir "$MAALI_INSTALL_DIR"
+  
+  git clone $MAALI_URL $MAALI_TOOL_BUILD_DIR
+  cd $MAALI_TOOL_BUILD_DIR
+  module list
+  pwd
+  ./bootstrap
+  ./configure --prefix=$MAALI_INSTALL_DIR
+  make -j $MAALI_CORES
+  make install
+}
+
+##############################################################################
